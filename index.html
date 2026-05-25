@@ -2573,6 +2573,15 @@ const style=document.createElement('style');
 style.textContent=`.cal-cell.has-sub{border-color:rgba(240,96,192,.3);background:rgba(240,96,192,.06)}.cal-cell.has-sub .cal-cell-name{color:var(--pink)}.cal-cell.has-sub .cal-cell-val{color:var(--pink)}.cal-cell.has-conta{border-color:rgba(96,160,240,.3);background:rgba(96,160,240,.06)}.cal-cell.has-conta .cal-cell-name{color:var(--blue)}.cal-cell.has-conta .cal-cell-val{color:var(--blue)}.cal-cell.has-cred{border-color:rgba(240,160,96,.25);}.cal-cell.has-cred .cal-cell-val{}`;
 document.head.appendChild(style);
 
+function eliminarTodosDados(){
+  if(!confirm('Tens a certeza? Esta ação elimina TODOS os dados e não pode ser desfeita.')) return;
+  ['fp_tx','fp_orc','fp_metas','fp_cred','fp_contas','fp_ativos','fp_inv','fp_pprs','fp_subs','fp_snapshots'].forEach(k=>localStorage.removeItem(k));
+  transacoes=[];orcamentos={};metas=[];creditos=[];contas=[];ativos=[];investimentos=[];pprs=[];subscricoes=[];
+  renderDash();
+  const msg=document.getElementById('import-msg');
+  if(msg){msg.style.display='block';msg.style.color='var(--green)';msg.textContent='Todos os dados foram eliminados.';}
+}
+
 </script>
 
 <script>
@@ -2623,16 +2632,6 @@ function mpSub(id){
   if(el) el.classList.add('active');
   mpShowPage(id);
 }
-// ── ELIMINAR TODOS OS DADOS ──────────────────────────────────
-function eliminarTodosDados(){
-  if(!confirm('Tens a certeza? Esta ação elimina TODOS os dados e não pode ser desfeita.')) return;
-  ['fp_tx','fp_orc','fp_metas','fp_cred','fp_contas','fp_ativos','fp_inv','fp_pprs','fp_subs','fp_snapshots'].forEach(k=>localStorage.removeItem(k));
-  transacoes=[];orcamentos={};metas=[];creditos=[];contas=[];ativos=[];investimentos=[];pprs=[];subscricoes=[];
-  renderDash();
-  const msg=document.getElementById('import-msg');
-  if(msg){msg.style.display='block';msg.style.color='var(--green)';msg.textContent='Todos os dados foram eliminados.';}
-}
-
 </script>
 
 <!-- MOBILE NAV -->
