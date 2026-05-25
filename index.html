@@ -155,14 +155,19 @@ body {
   .mobile-secondary::-webkit-scrollbar { display: none; }
   .mobile-secondary.show { display: flex; }
   .ms-item {
-    flex-shrink: 0; padding: 0 18px; height: 42px;
-    display: flex; align-items: center;
+    flex-shrink: 0; padding: 0 16px; height: 42px;
+    display: flex; align-items: center; gap: 6px;
     font-size: 13px; color: var(--text3);
     cursor: pointer; white-space: nowrap;
-    border-bottom: 2px solid transparent;
-    user-select: none;
+    user-select: none; position: relative;
   }
-  .ms-item.active { color: var(--green); border-bottom-color: var(--green); }
+  .ms-item.active { color: var(--green); }
+  .ms-item.active::after {
+    content: ''; position: absolute;
+    bottom: 6px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--green);
+  }
   /* LAYOUT */
   .grid2 { grid-template-columns: 1fr !important; }
   .metrics { grid-template-columns: repeat(2,1fr) !important; }
@@ -827,7 +832,8 @@ function goto(id){
     dashboard:renderDash, transacoes:renderTx, orcamento:renderOrc,
     poupancas:renderMetas, creditos:renderCreditos, mapa:renderMapaInit,
     contas:renderContas, ativos:renderAtivos, calendario:renderCal,
-    investimentos:renderInv, ppr:renderPPR
+    investimentos:renderInv, ppr:renderPPR, subscricoes:renderSubs,
+    backup:renderStorageInfo
   };
   if(renders[id])renders[id]();
 }
@@ -2331,7 +2337,7 @@ function renderCal(){
     return`<div class="${cls}" onclick="showMesCal(${i})">
       <div class="cal-cell-name">${nm}</div>
       <div class="cal-cell-val">${total>0?'€'+Math.round(total):'-'}</div>
-      ${pm.temCred?`<div style="font-size:9px;color:#f0a060;margin-top:2px">€${Math.round(pm.creds)} prest.</div>`:''}
+      <div style="font-size:9px;margin-top:2px;color:#f0a060;min-height:13px">${pm.temCred?'€'+Math.round(pm.creds)+' prest.':''}</div>
     </div>`;
   }).join('');
   showMesCal(null);
@@ -2586,6 +2592,7 @@ function eliminarTodosDados(){
 
 <script>
 if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(regs=>regs.forEach(r=>r.unregister()));
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').catch(()=>{});
   });
