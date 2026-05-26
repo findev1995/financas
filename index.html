@@ -112,7 +112,7 @@ body {
   .sidebar { display: none !important; }
   .main {
     padding: 1rem;
-    padding-bottom: 120px;
+    padding-bottom: 130px;
     height: 100vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -144,29 +144,30 @@ body {
   /* SECONDARY BAR */
   .mobile-secondary {
     position: fixed; bottom: 60px; left: 0; right: 0;
-    height: 42px;
-    background: var(--bg3);
+    height: 44px;
+    background: var(--bg2);
     border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
     display: none; align-items: center;
     overflow-x: auto; z-index: 199;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
   }
   .mobile-secondary::-webkit-scrollbar { display: none; }
   .mobile-secondary.show { display: flex; }
   .ms-item {
     flex-shrink: 0; padding: 0 16px; height: 42px;
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center;
     font-size: 13px; color: var(--text3);
     cursor: pointer; white-space: nowrap;
-    user-select: none; position: relative;
+    user-select: none;
+    border-top: 2px solid transparent;
   }
-  .ms-item.active { color: var(--green); }
-  .ms-item.active::after {
-    content: ''; position: absolute;
-    bottom: 6px; left: 50%; transform: translateX(-50%);
-    width: 4px; height: 4px; border-radius: 50%;
-    background: var(--green);
+  .ms-item.active {
+    color: var(--green);
+    border-top-color: var(--green);
+    background: rgba(45,212,160,0.06);
   }
   /* LAYOUT */
   .grid2 { grid-template-columns: 1fr !important; }
