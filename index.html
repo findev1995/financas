@@ -1505,21 +1505,50 @@ function renderMapa(){
   const c=creditos.find(x=>x.id===id);
   if(!c)return;
   const tm=c.taxa/100/12;
-  let saldo=c.divida, totalJ=0;
+
+  // Determinar mês de início
+  let startAno=hoje.getFullYear(), startMes=hoje.getMonth();
+  if(c.inicio){
+    const parts=c.inicio.split('-');
+    startAno=parseInt(parts[0]);
+    startMes=parseInt(parts[1])-1;
+  }
+
+  // Calcular prazo total original (prazo restante + meses já decorridos)
+  const mesesDecorridos=(hoje.getFullYear()-startAno)*12+(hoje.getMonth()-startMes);
+  const prazoTotal=c.prazo+Math.max(mesesDecorridos,0);
+
+  // Reconstruir saldo original para começar do início
+  // Andar para trás a partir do saldo atual
+  let saldoOriginal=c.divida;
+  for(let i=0;i<Math.max(mesesDecorridos,0);i++){
+    const j=saldoOriginal*tm;
+    const cap=c.prest-j;
+    saldoOriginal=saldoOriginal+cap; // desfazer amortização
+  }
+
+  let saldo=saldoOriginal, totalJ=0;
   const rows=[];
-  for(let i=1;i<=c.prazo;i++){
+
+  for(let i=1;i<=prazoTotal;i++){
     const juros=parseFloat((saldo*tm).toFixed(2));
     const cap=parseFloat(Math.min(c.prest-juros,saldo).toFixed(2));
     saldo=parseFloat(Math.max(saldo-cap,0).toFixed(2));
     totalJ+=juros;
-    const d=new Date(hoje.getFullYear(),hoje.getMonth()+i-1,c.dia||1);
-    rows.push({n:i,label:d.toLocaleDateString('pt-PT',{month:'short',year:'numeric'}),prest:c.prest,cap,juros,saldo,past:d<hoje,cur:i===1});
+
+    const mesIdx=startMes+(i-1);
+    const d=new Date(startAno+Math.floor(mesIdx/12), mesIdx%12, c.dia||1);
+    const isPast=d<new Date(hoje.getFullYear(),hoje.getMonth(),1);
+    const isCur=d.getFullYear()===hoje.getFullYear()&&d.getMonth()===hoje.getMonth();
+
+    rows.push({n:i,label:d.toLocaleDateString('pt-PT',{month:'short',year:'numeric'}),prest:c.prest,cap,juros,saldo,past:isPast,cur:isCur});
   }
+
   const efetiva=c.divida>0?((totalJ/c.divida)*100).toFixed(1):0;
   document.getElementById('mapa-metrics').innerHTML=`
     <div class="metric"><div class="metric-label">Capital em dívida</div><div class="metric-value red">€${fmtK(c.divida)}</div></div>
     <div class="metric"><div class="metric-label">Prestação mensal</div><div class="metric-value amber">€${fmtK(c.prest)}</div></div>
-    <div class="metric"><div class="metric-label">Total a pagar</div><div class="metric-value red">€${fmtK(c.prest*c.prazo)}</div></div>
+    <div class="metric"><div class="metric-label">Total a pagar</div><div class="metric-value red">€${fmtK(c.prest*prazoTotal)}</div></div>
     <div class="metric"><div class="metric-label">Total em juros</div><div class="metric-value red">€${fmtK(totalJ)}</div></div>
     <div class="metric"><div class="metric-label">Taxa anual</div><div class="metric-value blue">${c.taxa}%</div></div>
     <div class="metric"><div class="metric-label">Custo real</div><div class="metric-value red">${efetiva}%</div></div>
