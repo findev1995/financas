@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Finanças Pessoais</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -109,101 +109,71 @@ body {
 
 /* MOBILE — bottom tab bar */
 @media (max-width: 768px) {
-  .sidebar { display: none !important; }
+  body { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    border-right: none;
+    border-top: 0.5px solid var(--border);
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    z-index: 100;
+    background: var(--bg2);
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .logo { display: none; }
+  .nav-sep { display: none; }
+  .nav-item {
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 14px 10px;
+    font-size: 10px;
+    border-left: none;
+    border-top: 2px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 64px;
+  }
+  .nav-item i { font-size: 20px; }
+  .nav-item.active {
+    border-left-color: transparent;
+    border-top-color: var(--green);
+    color: var(--green);
+    background: rgba(45,212,160,0.06);
+  }
   .main {
     padding: 1rem;
-    padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
-    height: 100vh;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom)); /* space for bottom bar + notch */
+    height: calc(100vh - 0px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  /* PRIMARY BAR */
-  .mobile-primary {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--bg2);
-    border-top: 0.5px solid var(--border);
-    display: flex; align-items: stretch;
-    z-index: 200;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    padding-left: env(safe-area-inset-left, 0px);
-    padding-right: env(safe-area-inset-right, 0px);
-  }
-  .mp-item {
-    min-height: 60px;
-  }
-  .mp-item {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 3px; cursor: pointer;
-    color: var(--text3); font-size: 10px;
-    border-top: 2px solid transparent;
-    user-select: none; transition: color .15s;
-  }
-  .mp-item svg { width: 22px; height: 22px; }
-  .mp-item.active { color: var(--green); border-top-color: var(--green); }
-  .mp-item.mp-center {
-    flex: 1.4;
-  }
-  .mp-item.mp-center svg { width: 26px; height: 26px; }
-  /* SECONDARY BAR */
-  .mobile-secondary {
-    position: fixed; bottom: calc(60px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
-    height: 44px;
-    background: var(--bg2);
-    border-top: 0.5px solid var(--border);
-    border-bottom: 0.5px solid var(--border);
-    display: none; align-items: center;
-    overflow-x: auto; z-index: 199;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
-  }
-  .mobile-secondary::-webkit-scrollbar { display: none; }
-  .mobile-secondary.show { display: flex; }
-  .ms-item {
-    flex-shrink: 0; padding: 0 16px; height: 42px;
-    display: flex; align-items: center;
-    font-size: 13px; color: var(--text3);
-    cursor: pointer; white-space: nowrap;
-    user-select: none;
-    border-top: 2px solid transparent;
-  }
-  .ms-item.active {
-    color: var(--green);
-    border-top-color: var(--green);
-    background: rgba(45,212,160,0.06);
-  }
-  /* LAYOUT */
   .grid2 { grid-template-columns: 1fr !important; }
-  .metrics { grid-template-columns: repeat(2,1fr) !important; }
+  .grid3 { grid-template-columns: 1fr 1fr !important; }
+  .metrics { grid-template-columns: repeat(2, 1fr) !important; }
   .form-grid { grid-template-columns: 1fr !important; }
   .form-grid3 { grid-template-columns: 1fr 1fr !important; }
-  .full { grid-column: 1/-1 !important; }
+  .full { grid-column: 1 / -1 !important; }
+  .page-title { font-size: 17px; }
   .cal-grid { grid-template-columns: repeat(4,1fr) !important; }
   table { font-size: 11px; }
   th, td { padding: 6px 5px !important; }
+  .ativo-head { flex-wrap: wrap; gap: 8px; }
+  .ativo-foot { flex-wrap: wrap; }
   .metric-value { font-size: 17px !important; }
   .card { padding: .875rem 1rem; }
-  .ativo-head { flex-wrap: wrap; gap: 8px; }
   .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  /* Prevent iOS zoom on input focus */
-  input, select, textarea { font-size: 16px !important; }
-}
-
-/* PWA standalone mode fixes */
-@media (display-mode: standalone) {
-  .mobile-primary {
-    padding-bottom: env(safe-area-inset-bottom, 20px);
-  }
-  .mobile-secondary {
-    bottom: calc(60px + env(safe-area-inset-bottom, 20px));
-  }
-  .main {
-    padding-bottom: calc(140px + env(safe-area-inset-bottom, 20px));
-  }
-}
-@media (min-width: 769px) {
-  .mobile-primary, .mobile-secondary { display: none !important; }
+  /* Fix inline edit grids on mobile */
+  [style*="grid-template-columns: 1fr 1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+  [style*="grid-template-columns:repeat(4,1fr)"] { grid-template-columns: 1fr 1fr !important; }
+  [style*="grid-template-columns: repeat(4,1fr)"] { grid-template-columns: 1fr 1fr !important; }
 }
 
 .page-title {
@@ -344,8 +314,7 @@ tr.past td { color: var(--text3); }
 .cal-cell {
   background: var(--bg3); border: 0.5px solid var(--border);
   border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; cursor: pointer;
-  transition: all .15s; min-height: 80px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: all .15s;
 }
 .cal-cell:hover { border-color: var(--border2); }
 .cal-cell.has-cost { border-color: rgba(240,176,96,.3); background: rgba(240,176,96,.06); }
@@ -386,9 +355,6 @@ tr.past td { color: var(--text3); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 999px; }
-
-/* iOS: prevent zoom on input focus */
-input, select, textarea { font-size: 16px !important; }
 </style>
 
 <style>
@@ -536,11 +502,11 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Nova meta</div>
     <div class="form-grid">
-      <div class="form-group full"><label>Nome da meta</label><input type="text" id="p-nome"></div>
+      <div class="form-group full"><label>Nome da meta</label><input type="text" id="p-nome" placeholder="ex: Férias no Algarve, Fundo de emergência..."></div>
       <div class="form-group"><label>Objetivo total (€)</label><input type="number" id="p-obj" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Já poupado (€)</label><input type="number" id="p-atual" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Reforço mensal (€)</label><input type="number" id="p-reforco" placeholder="0.00 — opcional" min="0" step="0.01"></div>
-      <div class="form-group"><label>Dia do reforço</label><input type="number" id="p-dia" min="1" max="31"></div>
+      <div class="form-group"><label>Dia do reforço</label><input type="number" id="p-dia" placeholder="ex: 1" min="1" max="31"></div>
       <div class="form-group"><label>Categoria da despesa</label>
         <select id="p-cat">
           <option value="">— sem categoria —</option>
@@ -560,13 +526,13 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Adicionar crédito</div>
     <div class="form-grid">
-      <div class="form-group full"><label>Nome / banco</label><input type="text" id="c-nome"></div>
+      <div class="form-group full"><label>Nome / banco</label><input type="text" id="c-nome" placeholder="ex: Crédito pessoal BPI"></div>
       <div class="form-group"><label>Tipo</label><select id="c-tipo"><option>Crédito pessoal</option><option>Cartão de crédito</option><option>Hipoteca</option><option>Leasing</option><option>Outro</option></select></div>
       <div class="form-group"><label>Capital em dívida (€)</label><input type="number" id="c-divida" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Taxa anual (%)</label><input type="number" id="c-taxa" min="0" step="0.01"></div>
+      <div class="form-group"><label>Taxa anual (%)</label><input type="number" id="c-taxa" placeholder="ex: 7.5" min="0" step="0.01"></div>
       <div class="form-group"><label>Prestação mensal (€)</label><input type="number" id="c-prest" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Prazo restante (meses)</label><input type="number" id="c-prazo" min="1"></div>
-      <div class="form-group"><label>Dia de vencimento</label><input type="number" id="c-dia" min="1" max="31"></div>
+      <div class="form-group"><label>Prazo restante (meses)</label><input type="number" id="c-prazo" placeholder="ex: 36" min="1"></div>
+      <div class="form-group"><label>Dia de vencimento</label><input type="number" id="c-dia" placeholder="ex: 15" min="1" max="31"></div>
       <div class="form-group"><label>Data início (aaaa-mm)</label><input type="month" id="c-inicio"></div>
       <div class="form-group"><label>Conta a debitar prestação</label><select id="c-conta"><option value="">— sem conta —</option></select></div>
     </div>
@@ -574,7 +540,7 @@ svg[viewBox="0 0 24 24"] {
       <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Comissões e encargos</div>
       <div id="lista-encargos-form" style="margin-bottom:10px"></div>
       <div class="form-grid" id="encargo-form-fields">
-        <div class="form-group"><label>Descrição do encargo</label><input type="text" id="e-desc"></div>
+        <div class="form-group"><label>Descrição do encargo</label><input type="text" id="e-desc" placeholder="ex: Comissão de dossier, Seguro de vida..."></div>
         <div class="form-group"><label>Valor (€)</label><input type="number" id="e-valor" placeholder="0.00" min="0" step="0.01"></div>
         <div class="form-group"><label>Tipo</label>
           <select id="e-tipo">
@@ -613,10 +579,10 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Adicionar conta</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome / banco</label><input type="text" id="cn-nome"></div>
+      <div class="form-group"><label>Nome / banco</label><input type="text" id="cn-nome" placeholder="ex: Conta à ordem ActivoBank"></div>
       <div class="form-group"><label>Saldo disponível (€)</label><input type="number" id="cn-saldo" placeholder="0.00" step="0.01"></div>
       <div class="form-group"><label>Tipo</label><select id="cn-tipo"><option>Conta à ordem</option><option>Conta poupança</option><option>Conta a prazo</option><option>Conta cofre</option></select></div>
-      <div class="form-group"><label>Taxa de juro anual (% — se aplicável)</label><input type="number" id="cn-taxa" min="0" step="0.01"></div>
+      <div class="form-group"><label>Taxa de juro anual (% — se aplicável)</label><input type="number" id="cn-taxa" placeholder="ex: 2.5 — deixar 0 se não aplicável" min="0" step="0.01"></div>
       <div class="form-group"><label>Periodicidade do juro</label>
         <select id="cn-juro-periodo">
           <option value="nenhum">Sem juros</option>
@@ -626,12 +592,22 @@ svg[viewBox="0 0 24 24"] {
         </select>
       </div>
       <div class="form-group"><label>Comissão mensal (€ — ex: manutenção, cartão)</label><input type="number" id="cn-comissao" placeholder="0.00 — deixar 0 se não há" min="0" step="0.01"></div>
-      <div class="form-group"><label>Dia da comissão</label><input type="number" id="cn-comissao-dia" min="1" max="31"></div>
-      <div class="form-group"><label>Descrição da comissão</label><input type="text" id="cn-comissao-desc"></div>
+      <div class="form-group"><label>Dia da comissão</label><input type="number" id="cn-comissao-dia" placeholder="ex: 1" min="1" max="31"></div>
+      <div class="form-group"><label>Descrição da comissão</label><input type="text" id="cn-comissao-desc" placeholder="ex: Manutenção de conta, Anuidade cartão..."></div>
     </div>
     <button class="btn-primary" onclick="addConta()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
   </div>
   <div id="lista-contas"></div>
+  <div class="card" style="margin-top:0">
+    <div class="card-title">Transferência entre contas</div>
+    <div class="form-grid">
+      <div class="form-group"><label>De</label><select id="tr-origem"><option value="">— selecionar —</option></select></div>
+      <div class="form-group"><label>Para</label><select id="tr-destino"><option value="">— selecionar —</option></select></div>
+      <div class="form-group"><label>Valor (€)</label><input type="number" id="tr-valor" placeholder="0.00" min="0" step="0.01" inputmode="decimal"></div>
+    </div>
+    <button class="btn-primary" onclick="fazerTransferencia()">Transferir</button>
+    <span id="tr-ok" style="font-size:12px;color:var(--green);margin-left:12px;display:none">✓ Transferência registada</span>
+  </div>
 </div>
 
 <!-- ATIVOS -->
@@ -640,11 +616,11 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Novo ativo</div>
     <div class="form-grid">
-      <div class="form-group full"><label>Descrição</label><input type="text" id="at-nome"></div>
+      <div class="form-group full"><label>Descrição</label><input type="text" id="at-nome" placeholder="ex: Automóvel Peugeot 308"></div>
       <div class="form-group"><label>Tipo</label><select id="at-tipo"><option>Automóvel</option><option>Imóvel</option><option>Equipamento</option><option>Outro</option></select></div>
       <div class="form-group"><label>Valor de aquisição (€)</label><input type="number" id="at-aq" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Valor de mercado (€)</label><input type="number" id="at-mkt" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Ano de aquisição</label><input type="number" id="at-ano" min="1900" max="2099"></div>
+      <div class="form-group"><label>Ano de aquisição</label><input type="number" id="at-ano" placeholder="ex: 2020" min="1900" max="2099"></div>
     </div>
     <button class="btn-primary" onclick="addAtivo()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Criar ativo</button>
   </div>
@@ -671,7 +647,7 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Registar investimento</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome / ticker</label><input type="text" id="i-nome" placeholder="ex: IWDA, BTC"></div>
+      <div class="form-group"><label>Nome / ticker</label><input type="text" id="i-nome" placeholder="ex: ETF MSCI World"></div>
       <div class="form-group"><label>Tipo</label><select id="i-tipo"><option>ETF</option><option>Ações</option><option>Criptomoeda</option><option>Obrigações</option><option>Imobiliário</option><option>Depósito a Prazo</option><option>Outro</option></select></div>
       <div class="form-group"><label>Valor investido (€)</label><input type="number" id="i-inv" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Valor atual (€)</label><input type="number" id="i-atual" placeholder="0.00" min="0" step="0.01"></div>
@@ -688,12 +664,12 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Adicionar</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome / gestora</label><input type="text" id="ppr-nome"></div>
+      <div class="form-group"><label>Nome / gestora</label><input type="text" id="ppr-nome" placeholder="ex: PPR Millenniumbcp"></div>
       <div class="form-group"><label>Tipo</label><select id="ppr-tipo"><option>PPR</option><option>Fundo de pensões</option><option>Plano reforma empresa</option><option>Outro</option></select></div>
       <div class="form-group"><label>Total contribuído (€)</label><input type="number" id="ppr-contrib" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Valor atual (€)</label><input type="number" id="ppr-atual" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Contribuição mensal (€)</label><input type="number" id="ppr-mensal" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Ano de resgate</label><input type="number" id="ppr-ano" min="2024" max="2100"></div>
+      <div class="form-group"><label>Ano de resgate</label><input type="number" id="ppr-ano" placeholder="ex: 2050" min="2024" max="2100"></div>
     </div>
     <button class="btn-primary" onclick="addPPR()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
   </div>
@@ -707,7 +683,7 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Nova subscrição</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome</label><input type="text" id="sub-nome"></div>
+      <div class="form-group"><label>Nome</label><input type="text" id="sub-nome" placeholder="ex: Netflix, Spotify, Adobe..."></div>
       <div class="form-group"><label>Valor (€)</label><input type="number" id="sub-valor" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Periodicidade</label>
         <select id="sub-periodo">
@@ -717,15 +693,15 @@ svg[viewBox="0 0 24 24"] {
           <option value="semestral">Semestral</option>
         </select>
       </div>
-      <div class="form-group"><label>Dia de cobrança</label><input type="number" id="sub-dia" min="1" max="31"></div>
-      <div class="form-group"><label>Mês (anual/trimestral)</label><input type="number" id="sub-mes" min="1" max="12"></div>
+      <div class="form-group"><label>Dia de cobrança</label><input type="number" id="sub-dia" placeholder="ex: 5" min="1" max="31"></div>
+      <div class="form-group"><label>Mês (anual/trimestral)</label><input type="number" id="sub-mes" placeholder="ex: 3" min="1" max="12"></div>
       <div class="form-group"><label>Categoria</label>
         <select id="sub-cat">
           <option>Entretenimento</option><option>Produtividade</option><option>Saúde</option>
           <option>Educação</option><option>Software</option><option>Outro</option>
         </select>
       </div>
-      <div class="form-group full"><label>Notas</label><input type="text" id="sub-notas"></div>
+      <div class="form-group full"><label>Notas</label><input type="text" id="sub-notas" placeholder="ex: Plano familiar, partilhado com..."></div>
       <div class="form-group"><label>Conta a debitar</label><select id="sub-conta"><option value="">— sem conta —</option></select></div>
     </div>
     <button class="btn-primary" onclick="addSub()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
@@ -750,7 +726,7 @@ svg[viewBox="0 0 24 24"] {
     <div id="import-msg" style="margin-top:10px;font-size:13px;display:none"></div>
   </div>
   <div class="card">
-    <div class="card-title" style="display:flex;justify-content:space-between;align-items:center"><span>Informação sobre armazenamento</span><button onclick="eliminarTodosDados()" style="background:rgba(240,96,96,0.15);color:#f06060;border:0.5px solid rgba(240,96,96,0.3);padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--font)">Eliminar todos os dados</button></div>
+    <div class="card-title">Informação sobre armazenamento</div>
     <div id="storage-info"></div>
     <div style="margin-top:1rem">
       <button class="btn-ghost" onclick="forcaMigracao()" style="font-size:12px"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 9 4.9L6 3"/><path d="M3 3v5h5"/></svg> Tentar importar dados de versão anterior</button>
@@ -856,8 +832,7 @@ function goto(id){
     dashboard:renderDash, transacoes:renderTx, orcamento:renderOrc,
     poupancas:renderMetas, creditos:renderCreditos, mapa:renderMapaInit,
     contas:renderContas, ativos:renderAtivos, calendario:renderCal,
-    investimentos:renderInv, ppr:renderPPR, subscricoes:renderSubs,
-    backup:renderStorageInfo
+    investimentos:renderInv, ppr:renderPPR
   };
   if(renders[id])renders[id]();
 }
@@ -1092,8 +1067,8 @@ function renderDashOrcamento(){
 function renderDash(){
   document.getElementById('dash-mes-label').textContent=MESES_FULL[vMonth]+' '+vYear;
   const txs=mesAtual();
-  const rec=txs.filter(t=>t.tipo==='receita').reduce((s,t)=>s+t.valor,0);
-  const desp=txs.filter(t=>t.tipo==='despesa').reduce((s,t)=>s+t.valor,0);
+  const rec=txs.filter(t=>t.tipo==='receita'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0);
+  const desp=txs.filter(t=>t.tipo==='despesa'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0);
   const saldo=rec-desp;
   const divida=creditos.reduce((s,c)=>s+c.divida,0);
   const prestMes=creditos.reduce((s,c)=>s+c.prest,0);
@@ -1226,6 +1201,9 @@ function renderDash(){
 function populaSelectContas(){
   const opts='<option value="">— sem conta —</option>'+contas.map(c=>`<option value="${c.id}">${c.nome}</option>`).join('');
   ['t-conta','sub-conta','c-conta'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
+  // Transfer selects
+  const optsT='<option value="">— selecionar —</option>'+contas.map(c=>`<option value="${c.id}">${c.nome} (€${fmt(saldoEfetivo(c.id))})</option>`).join('');
+  ['tr-origem','tr-destino'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=optsT;});
 }
 
 function saldoEfetivo(contaId){
@@ -1773,12 +1751,12 @@ function renderAtivos(){
         <div id="fc-${a.id}" style="display:none;margin-bottom:10px">
           <div class="form-inline" style="background:var(--bg3);border-radius:var(--radius-sm);padding:.75rem">
             <div class="form-grid3">
-              <div class="form-group"><label>Descrição</label><input type="text" id="cd-d-${a.id}"></div>
+              <div class="form-group"><label>Descrição</label><input type="text" id="cd-d-${a.id}" placeholder="ex: IUC"></div>
               <div class="form-group"><label>Valor (€)</label><input type="number" id="cd-v-${a.id}" placeholder="0.00" min="0" step="0.01"></div>
-              <div class="form-group"><label>Mês (1-12)</label><input type="number" id="cd-m-${a.id}" min="1" max="12"></div>
+              <div class="form-group"><label>Mês (1-12)</label><input type="number" id="cd-m-${a.id}" placeholder="ex: 2" min="1" max="12"></div>
             </div>
             <div class="form-grid">
-              <div class="form-group"><label>Dia limite</label><input type="number" id="cd-dia-${a.id}" min="1" max="31"></div>
+              <div class="form-group"><label>Dia limite</label><input type="number" id="cd-dia-${a.id}" placeholder="ex: 27" min="1" max="31"></div>
               <div class="form-group"><label>Categoria</label><select id="cd-c-${a.id}"><option>Seguro</option><option>Imposto</option><option>Manutenção</option><option>Condomínio</option><option>Inspeção</option><option>Outro</option></select></div>
             </div>
             <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="addCusto(${a.id})">Guardar</button>
@@ -2361,7 +2339,7 @@ function renderCal(){
     return`<div class="${cls}" onclick="showMesCal(${i})">
       <div class="cal-cell-name">${nm}</div>
       <div class="cal-cell-val">${total>0?'€'+Math.round(total):'-'}</div>
-      <div style="font-size:9px;margin-top:2px;color:#f0a060;min-height:13px">${pm.temCred?'€'+Math.round(pm.creds)+' prest.':''}</div>
+      ${pm.temCred?`<div style="font-size:9px;color:#f0a060;margin-top:2px">€${Math.round(pm.creds)} prest.</div>`:''}
     </div>`;
   }).join('');
   showMesCal(null);
@@ -2429,7 +2407,7 @@ function renderCalDetail(custos){
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <span style="font-family:var(--mono)">€${fmt(c.valor)}</span>
-        <span class="${pillUrgCls(c.dias)}">${pillUrgLabel(c.dias)}</span>
+        ${!isCred?`<span class="${pillUrgCls(c.dias)}">${pillUrgLabel(c.dias)}</span>`:''}
       </div></div>`;
   }).join('');
 }
@@ -2603,77 +2581,75 @@ const style=document.createElement('style');
 style.textContent=`.cal-cell.has-sub{border-color:rgba(240,96,192,.3);background:rgba(240,96,192,.06)}.cal-cell.has-sub .cal-cell-name{color:var(--pink)}.cal-cell.has-sub .cal-cell-val{color:var(--pink)}.cal-cell.has-conta{border-color:rgba(96,160,240,.3);background:rgba(96,160,240,.06)}.cal-cell.has-conta .cal-cell-name{color:var(--blue)}.cal-cell.has-conta .cal-cell-val{color:var(--blue)}.cal-cell.has-cred{border-color:rgba(240,160,96,.25);}.cal-cell.has-cred .cal-cell-val{}`;
 document.head.appendChild(style);
 
-function eliminarTodosDados(){
-  if(!confirm('Tens a certeza? Esta ação elimina TODOS os dados e não pode ser desfeita.')) return;
-  ['fp_tx','fp_orc','fp_metas','fp_cred','fp_contas','fp_ativos','fp_inv','fp_pprs','fp_subs','fp_snapshots'].forEach(k=>localStorage.removeItem(k));
-  transacoes=[];orcamentos={};metas=[];creditos=[];contas=[];ativos=[];investimentos=[];pprs=[];subscricoes=[];
-  renderDash();
-  const msg=document.getElementById('import-msg');
-  if(msg){msg.style.display='block';msg.style.color='var(--green)';msg.textContent='Todos os dados foram eliminados.';}
+// ── TRANSFERÊNCIA ENTRE CONTAS ───────────────────────────────
+function fazerTransferencia(){
+  const origemId=parseInt(document.getElementById('tr-origem').value);
+  const destinoId=parseInt(document.getElementById('tr-destino').value);
+  const valor=parseFloat(document.getElementById('tr-valor').value);
+  const desc='Transferência';
+
+  if(!origemId||!destinoId){alert('Seleciona as duas contas.');return;}
+  if(origemId===destinoId){alert('As contas têm de ser diferentes.');return;}
+  if(!valor||valor<=0){alert('Introduz um valor válido.');return;}
+
+  const origem=contas.find(c=>c.id===origemId);
+  const destino=contas.find(c=>c.id===destinoId);
+  const saldoAtual=saldoEfetivo(origemId);
+
+  if(saldoAtual<valor){
+    if(!confirm(`Saldo disponível na conta "${origem.nome}" é €${fmt(saldoAtual)}. Continuar mesmo assim?`)) return;
+  }
+
+  const data=hoje.toISOString().split('T')[0];
+  const tsId=Date.now();
+
+  // Regista saída na conta de origem
+  transacoes.unshift({
+    id:tsId,
+    tipo:'despesa',
+    valor,
+    cat:'Transferência',
+    data,
+    desc:`${desc} → ${destino.nome}`,
+    contaId:origemId,
+    isTransferencia:true,
+    parId:tsId+1
+  });
+
+  // Regista entrada na conta de destino
+  transacoes.unshift({
+    id:tsId+1,
+    tipo:'receita',
+    valor,
+    cat:'Transferência',
+    data,
+    desc:`${desc} ← ${origem.nome}`,
+    contaId:destinoId,
+    isTransferencia:true,
+    parId:tsId
+  });
+
+  sv('fp_tx',transacoes);
+
+  // Reset form
+  document.getElementById('tr-valor').value='';
+  const ok=document.getElementById('tr-ok');
+  ok.style.display='inline';
+  setTimeout(()=>ok.style.display='none',2500);
+
+  // Refresh
+  renderContas();
+  if(document.getElementById('page-dashboard').classList.contains('active')) renderDash();
 }
 
 </script>
 
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.getRegistrations().then(regs=>regs.forEach(r=>r.unregister()));
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').catch(()=>{});
   });
 }
-
-// ── MOBILE NAV ──────────────────────────────────────────────
-const MP_GROUPS = {
-  dinheiro:   [{id:'transacoes',label:'Transações'},{id:'contas',label:'Contas'},{id:'orcamento',label:'Orçamento'}],
-  obrigacoes: [{id:'creditos',label:'Créditos'},{id:'mapa',label:'Mapa prestações'},{id:'subscricoes',label:'Subscrições'},{id:'calendario',label:'Calendário'}],
-  patrimonio: [{id:'ativos',label:'Ativos'},{id:'poupancas',label:'Poupanças'},{id:'investimentos',label:'Investimentos'},{id:'ppr',label:'PPR / Pensões'}],
-  settings:   [{id:'orcamento',label:'Orçamento'},{id:'backup',label:'Backup'}]
-};
-const MP_RENDERS = {
-  dashboard:renderDash, transacoes:renderTx, orcamento:renderOrc,
-  poupancas:renderMetas, creditos:renderCreditos, mapa:renderMapaInit,
-  contas:renderContas, ativos:renderAtivos, calendario:renderCal,
-  investimentos:renderInv, ppr:renderPPR, subscricoes:renderSubs,
-  backup:renderStorageInfo
-};
-function mpShowPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  if(MP_RENDERS[id]) MP_RENDERS[id]();
-}
-function mpDash(){
-  document.querySelectorAll('.mp-item').forEach(el=>el.classList.remove('active'));
-  document.getElementById('mp-dashboard').classList.add('active');
-  const sec=document.getElementById('mobile-secondary');
-  sec.classList.remove('show'); sec.innerHTML='';
-  mpShowPage('dashboard');
-}
-function mpGroup(g){
-  document.querySelectorAll('.mp-item').forEach(el=>el.classList.remove('active'));
-  document.getElementById('mp-'+g).classList.add('active');
-  const items=MP_GROUPS[g];
-  const sec=document.getElementById('mobile-secondary');
-  sec.classList.add('show');
-  sec.innerHTML=items.map((it,i)=>`<div class="ms-item${i===0?' active':''}" id="ms-${it.id}" onclick="mpSub('${it.id}')">${it.label}</div>`).join('');
-  mpShowPage(items[0].id);
-}
-function mpSub(id){
-  document.querySelectorAll('.ms-item').forEach(el=>el.classList.remove('active'));
-  const el=document.getElementById('ms-'+id);
-  if(el) el.classList.add('active');
-  mpShowPage(id);
-}
 </script>
-
-<!-- MOBILE NAV -->
-<nav class="mobile-primary" id="mobile-primary">
-  <div class="mp-item" id="mp-dinheiro" onclick="mpGroup('dinheiro')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.2 7a6 7 0 1 0 0 10"/><path d="M13 10H6m0 4h7"/></svg><span>Dinheiro</span></div>
-  <div class="mp-item" id="mp-obrigacoes" onclick="mpGroup('obrigacoes')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h2"/></svg><span>Obrigações</span></div>
-  <div class="mp-item mp-center active" id="mp-dashboard" onclick="mpDash()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></div>
-  <div class="mp-item" id="mp-patrimonio" onclick="mpGroup('patrimonio')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/></svg><span>Património</span></div>
-  <div class="mp-item" id="mp-settings" onclick="mpGroup('settings')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.657 3.582 3 8 3s8-1.343 8-3V6"/><path d="M4 12v6c0 1.657 3.582 3 8 3"/><path d="M16 19l3-3 3 3"/><path d="M19 16v6"/></svg><span>Definições</span></div>
-</nav>
-<nav class="mobile-secondary" id="mobile-secondary"></nav>
-
 </body>
 </html>
