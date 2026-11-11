@@ -508,16 +508,17 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Nova transação</div>
     <div class="form-grid">
-      <div class="form-group"><label>Tipo</label><select id="t-tipo"><option value="despesa">Despesa</option><option value="receita">Receita</option></select></div>
+      <div class="form-group"><label>Tipo</label><select id="t-tipo" onchange="onTipoTxChange()"><option value="despesa">Despesa</option><option value="receita">Receita</option><option value="transferencia">Transferência entre contas</option></select></div>
       <div class="form-group"><label>Valor (€)</label><input type="number" id="t-valor" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Categoria</label>
+      <div class="form-group" id="t-cat-group"><label>Categoria</label>
         <select id="t-cat">
           <option>Alimentação</option><option>Transportes</option><option>Habitação</option>
           <option>Lazer</option><option>Saúde</option><option>Educação</option>
-          <option>Vestuário</option><option>Salário</option><option>Poupança</option><option>Outro</option>
+          <option>Vestuário</option><option>Poupança</option><option>Outro</option>
         </select>
       </div>
-      <div class="form-group"><label>Conta</label><select id="t-conta"><option value="">— sem conta —</option></select></div>
+      <div class="form-group"><label id="t-conta-label">Conta</label><select id="t-conta"><option value="">— sem conta —</option></select></div>
+      <div class="form-group" id="t-dest-group" style="display:none"><label>Conta destino</label><select id="t-conta-dest"><option value="">— escolher —</option></select></div>
       <div class="form-group"><label>Data</label><input type="date" id="t-data"></div>
       <div class="form-group full"><label>Descrição</label><input type="text" id="t-desc" placeholder="ex: Supermercado Continente"></div>
     </div>
@@ -803,7 +804,14 @@ svg[viewBox="0 0 24 24"] {
 <script>
 const MESES_SHORT=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const MESES_FULL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const CAT_DOT={Alimentação:'#2dd4a0',Transportes:'#60a0f0',Habitação:'#a090f0',Lazer:'#f0b060',Saúde:'#f06080',Educação:'#80d0f0',Vestuário:'#d0a060',Salário:'#2dd4a0',Outro:'#555'};
+const CAT_DOT={Alimentação:'#2dd4a0',Transportes:'#60a0f0',Habitação:'#a090f0',Lazer:'#f0b060',Saúde:'#f06080',Educação:'#80d0f0',Vestuário:'#d0a060',Salário:'#2dd4a0',Subsídio:'#60d0a0',Rendimentos:'#80d060',Reembolso:'#60b0d0',Venda:'#d0c060',Transferência:'#888',Outro:'#555'};
+const CATS_DESPESA=['Alimentação','Transportes','Habitação','Lazer','Saúde','Educação','Vestuário','Poupança','Outro'];
+const CATS_RECEITA=['Salário','Subsídio','Rendimentos','Reembolso','Venda','Outro'];
+function optsCat(tipo,sel){
+  const lista=tipo==='receita'?CATS_RECEITA:CATS_DESPESA;
+  const arr=(sel&&!lista.includes(sel))?[...lista,sel]:lista;  // mantém categorias antigas já guardadas
+  return arr.map(c=>`<option ${c===sel?'selected':''}>${escapeCal(c)}</option>`).join('');
+}
 const AT_DOT={Automóvel:'#60a0f0',Imóvel:'#2dd4a0',Equipamento:'#888',Outro:'#f0b060'};
 const CR_DOT={'Crédito pessoal':'#f06060','Cartão de crédito':'#f06090','Hipoteca':'#60a0f0','Leasing':'#f0b060',Outro:'#888'};
 const CN_DOT={'Conta à ordem':'#60a0f0','Conta poupança':'#2dd4a0','Conta a prazo':'#80d060','Conta cofre':'#a090f0'};
@@ -1222,8 +1230,8 @@ function renderDashOrcamento(){
 function renderDash(){
   document.getElementById('dash-mes-label').textContent=MESES_FULL[vMonth]+' '+vYear;
   const txs=mesAtual();
-  const rec=txs.filter(t=>t.tipo==='receita').reduce((s,t)=>s+t.valor,0);
-  const desp=txs.filter(t=>t.tipo==='despesa').reduce((s,t)=>s+t.valor,0);
+  const rec=txs.filter(t=>t.tipo==='receita'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0);
+  const desp=txs.filter(t=>t.tipo==='despesa'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0);
   const saldo=rec-desp;
   const divida=creditos.reduce((s,c)=>s+estadoCreditoHoje(c).saldo,0);
   const prestMes=creditos.reduce((s,c)=>s+(estadoCreditoHoje(c).futuros[0]?.prest||0),0);
@@ -1267,7 +1275,7 @@ function renderDash(){
   `;
 
   const catMap={};
-  txs.filter(t=>t.tipo==='despesa').forEach(t=>{catMap[t.cat]=(catMap[t.cat]||0)+t.valor;});
+  txs.filter(t=>t.tipo==='despesa'&&!t.isTransferencia).forEach(t=>{catMap[t.cat]=(catMap[t.cat]||0)+t.valor;});
   const sorted=Object.entries(catMap).sort((a,b)=>b[1]-a[1]);
   const totalDesp=sorted.reduce((s,[,v])=>s+v,0);
 
@@ -1315,7 +1323,7 @@ function renderDash(){
     </div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">Sem despesas este mês</div>';
 
 
-  const recent=[...txs].sort((a,b)=>new Date(b.data)-new Date(a.data)).slice(0,6);
+  const recent=[...txs].filter(t=>!t.isTransferencia).sort((a,b)=>new Date(b.data)-new Date(a.data)).slice(0,6);
   document.getElementById('dash-recent').innerHTML=recent.length?recent.map(t=>`
     <div class="row"><div class="row-left"><span class="dot" style="background:${CAT_DOT[t.cat]||'#555'}"></span>
     <div><div>${escapeCal(t.desc||t.cat)}</div><div class="sub">${new Date(t.data).toLocaleDateString('pt-PT')}</div></div></div>
@@ -1334,7 +1342,7 @@ function renderDash(){
     let m=vMonth-i, y=vYear;
     if(m<0){m+=12;y--;}
     const mtx=transacoes.filter(t=>{const d=new Date(t.data);return d.getFullYear()===y&&d.getMonth()===m;});
-    last6.push({label:MESES_SHORT[m],rec:mtx.filter(t=>t.tipo==='receita').reduce((s,t)=>s+t.valor,0),desp:mtx.filter(t=>t.tipo==='despesa').reduce((s,t)=>s+t.valor,0)});
+    last6.push({label:MESES_SHORT[m],rec:mtx.filter(t=>t.tipo==='receita'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0),desp:mtx.filter(t=>t.tipo==='despesa'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0)});
   }
   if(dashChart)dashChart.destroy();
   dashChart=new Chart(document.getElementById('chartDash'),{
@@ -1356,6 +1364,8 @@ function renderDash(){
 function populaSelectContas(){
   const opts='<option value="">— sem conta —</option>'+contas.map(c=>`<option value="${c.id}">${escapeCal(c.nome)}</option>`).join('');
   ['t-conta','sub-conta','c-conta'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
+  const dest=document.getElementById('t-conta-dest');
+  if(dest)dest.innerHTML='<option value="">— escolher —</option>'+contas.map(c=>`<option value="${c.id}">${escapeCal(c.nome)}</option>`).join('');
 }
 
 function saldoEfetivo(contaId){
@@ -1363,6 +1373,15 @@ function saldoEfetivo(contaId){
   if(!c)return 0;
   const delta=transacoes.filter(t=>t.contaId===contaId).reduce((s,t)=>t.tipo==='receita'?s+t.valor:s-t.valor,0);
   return c.saldo+delta;
+}
+
+function onTipoTxChange(){
+  const tipo=document.getElementById('t-tipo').value;
+  const transf=tipo==='transferencia';
+  document.getElementById('t-cat-group').style.display=transf?'none':'';
+  document.getElementById('t-dest-group').style.display=transf?'':'none';
+  document.getElementById('t-conta-label').textContent=transf?'Conta origem':'Conta';
+  if(!transf)document.getElementById('t-cat').innerHTML=optsCat(tipo,null);
 }
 
 function addTx(){
@@ -1373,6 +1392,25 @@ function addTx(){
   const data=document.getElementById('t-data').value;
   const desc=document.getElementById('t-desc').value;
   if(!valor||!data)return;
+  if(tipo==='transferencia'){
+    const destId=parseInt(document.getElementById('t-conta-dest').value)||null;
+    if(!contaId||!destId||contaId===destId){avisoErro('Escolhe duas contas diferentes (origem e destino).');return;}
+    const base=Date.now();
+    const nomeO=(contas.find(c=>c.id===contaId)||{}).nome||'';
+    const nomeD=(contas.find(c=>c.id===destId)||{}).nome||'';
+    const d=desc||('Transferência '+nomeO+' → '+nomeD);
+    // duas pernas ligadas: saída na origem (despesa) e entrada no destino (receita), fora dos totais
+    transacoes.unshift({id:base+1,tipo:'receita',valor,cat:'Transferência',data,desc:d,contaId:destId,isTransferencia:true,transferId:base,contaOrigemId:contaId,contaDestinoId:destId});
+    transacoes.unshift({id:base,tipo:'despesa',valor,cat:'Transferência',data,desc:d,contaId:contaId,isTransferencia:true,transferId:base,contaOrigemId:contaId,contaDestinoId:destId});
+    sv('fp_tx',transacoes);
+    document.getElementById('t-valor').value='';
+    document.getElementById('t-desc').value='';
+    const ok2=document.getElementById('t-ok');
+    ok2.style.display='inline';
+    setTimeout(()=>ok2.style.display='none',2000);
+    renderTx();
+    return;
+  }
   transacoes.unshift({id:Date.now(),tipo,valor,cat,data,desc,contaId});
   sv('fp_tx',transacoes);
   document.getElementById('t-valor').value='';
@@ -1383,7 +1421,13 @@ function addTx(){
   renderTx();
 }
 
-function delTx(id){transacoes=transacoes.filter(t=>t.id!==id);sv('fp_tx',transacoes);renderTx();}
+function delTx(id){
+  const alvo=transacoes.find(t=>t.id===id);
+  // numa transferência apaga as duas pernas, para os saldos não ficarem desequilibrados
+  if(alvo&&alvo.isTransferencia&&alvo.transferId)transacoes=transacoes.filter(t=>t.transferId!==alvo.transferId);
+  else transacoes=transacoes.filter(t=>t.id!==id);
+  sv('fp_tx',transacoes);renderTx();
+}
 
 function editTx(id){
   const t=transacoes.find(x=>x.id===id);
@@ -1391,8 +1435,9 @@ function editTx(id){
   const contaOpts='<option value="">— sem conta —</option>'+contas.map(c=>`<option value="${c.id}" ${c.id===t.contaId?'selected':''}>${escapeCal(c.nome)}</option>`).join('');
   const iStyle='background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:12px;padding:6px 8px;outline:none;width:100%';
   document.getElementById('tx-row-'+id).innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:8px 0;align-items:end;width:100%">
-      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">TIPO</div><select id="et-tipo-${id}" style="${iStyle}"><option value="despesa" ${t.tipo==='despesa'?'selected':''}>Despesa</option><option value="receita" ${t.tipo==='receita'?'selected':''}>Receita</option></select></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;padding:8px 0;align-items:end;width:100%">
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">TIPO</div><select id="et-tipo-${id}" onchange="document.getElementById('et-cat-${id}').innerHTML=optsCat(this.value,null)" style="${iStyle}"><option value="despesa" ${t.tipo==='despesa'?'selected':''}>Despesa</option><option value="receita" ${t.tipo==='receita'?'selected':''}>Receita</option></select></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">CATEGORIA</div><select id="et-cat-${id}" style="${iStyle}">${optsCat(t.tipo,t.cat)}</select></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">VALOR (€)</div><input type="number" id="et-valor-${id}" value="${t.valor}" style="${iStyle};font-family:var(--mono)"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">DATA</div><input type="date" id="et-data-${id}" value="${t.data}" style="${iStyle}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">CONTA</div><select id="et-conta-${id}" style="${iStyle}">${contaOpts}</select></div>
@@ -1410,8 +1455,9 @@ function saveTx(id){
   const data=document.getElementById('et-data-'+id).value;
   const desc=document.getElementById('et-desc-'+id).value;
   const contaId=parseInt(document.getElementById('et-conta-'+id).value)||null;
+  const catEl=document.getElementById('et-cat-'+id);
   if(!valor||!data)return;
-  transacoes=transacoes.map(t=>t.id===id?{...t,tipo,valor,data,desc,contaId}:t);
+  transacoes=transacoes.map(t=>t.id===id?{...t,tipo,valor,data,desc,contaId,cat:catEl?catEl.value:t.cat}:t);
   sv('fp_tx',transacoes);
   renderTx();
 }
@@ -1420,8 +1466,19 @@ function renderTx(){
   populaSelectContas();
   const el=document.getElementById('lista-tx');
   if(!transacoes.length){el.innerHTML='<div style="color:var(--text3);padding:8px 0;font-size:13px">Nenhuma transação</div>';return;}
-  el.innerHTML=transacoes.map(t=>{
+  el.innerHTML=transacoes.filter(t=>!(t.isTransferencia&&t.tipo==='receita')).map(t=>{
     const conta=t.contaId?contas.find(c=>c.id===t.contaId):null;
+    if(t.isTransferencia){
+      const o=contas.find(c=>c.id===t.contaOrigemId),d=contas.find(c=>c.id===t.contaDestinoId);
+      return`<div class="row" id="tx-row-${t.id}">
+      <div class="row-left"><span class="dot" style="background:${CAT_DOT['Transferência']}"></span>
+        <div><div>${escapeCal(t.desc||'Transferência')}</div>
+        <div class="sub">Transferência · ${new Date(t.data).toLocaleDateString('pt-PT')} · <span style="color:var(--blue)">${escapeCal(o?o.nome:'?')} → ${escapeCal(d?d.nome:'?')}</span></div></div></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="amount" style="color:var(--text2)">€${fmt(t.valor)}</span>
+        <button class="btn-del" onclick="delTx(${t.id})" aria-label="Remover"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
+      </div></div>`;
+    }
     return`<div class="row" id="tx-row-${t.id}">
       <div class="row-left"><span class="dot" style="background:${CAT_DOT[t.cat]||'#555'}"></span>
         <div>
