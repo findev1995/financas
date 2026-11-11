@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Finanças Pessoais</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -110,42 +110,65 @@ body {
 /* MOBILE — bottom tab bar */
 @media (max-width: 768px) {
   .sidebar { display: none !important; }
-  .main { padding: 1rem; padding-bottom: 128px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .main {
+    padding: 1rem;
+    padding-bottom: 120px;
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* PRIMARY BAR */
   .mobile-primary {
     position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--bg2); border-top: 0.5px solid var(--border);
-    display: flex; align-items: stretch; z-index: 200;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: 60px;
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border);
+    display: flex; align-items: stretch;
+    z-index: 200;
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .mp-item {
-    flex: 1; min-height: 60px; display: flex; flex-direction: column;
+    flex: 1; display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 3px; padding: 8px 4px;
-    cursor: pointer; color: var(--text3); font-size: 10px;
-    border-top: 2px solid transparent; user-select: none;
+    gap: 3px; cursor: pointer;
+    color: var(--text3); font-size: 10px;
+    border-top: 2px solid transparent;
+    user-select: none; transition: color .15s;
   }
   .mp-item svg { width: 22px; height: 22px; }
   .mp-item.active { color: var(--green); border-top-color: var(--green); }
-  .mp-item.mp-center { flex: 1.3; }
+  .mp-item.mp-center {
+    flex: 1.4;
+  }
   .mp-item.mp-center svg { width: 26px; height: 26px; }
+  /* SECONDARY BAR */
   .mobile-secondary {
-    position: fixed; bottom: calc(60px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
-    height: 44px; background: var(--bg2);
-    border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border);
-    display: none; align-items: center; overflow-x: auto; z-index: 199;
-    scrollbar-width: none; -webkit-overflow-scrolling: touch;
-    box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
+    position: fixed; bottom: 60px; left: 0; right: 0;
+    height: 42px;
+    background: var(--bg3);
+    border-top: 0.5px solid var(--border);
+    display: none; align-items: center;
+    overflow-x: auto; z-index: 199;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
   .mobile-secondary::-webkit-scrollbar { display: none; }
   .mobile-secondary.show { display: flex; }
   .ms-item {
-    flex-shrink: 0; padding: 0 18px; height: 44px;
-    display: flex; align-items: center;
+    flex-shrink: 0; padding: 0 16px; height: 42px;
+    display: flex; align-items: center; gap: 6px;
     font-size: 13px; color: var(--text3);
     cursor: pointer; white-space: nowrap;
-    border-top: 2px solid transparent; user-select: none;
+    user-select: none; position: relative;
   }
-  .ms-item.active { color: var(--green); border-top-color: var(--green); background: rgba(45,212,160,0.06); }
+  .ms-item.active { color: var(--green); }
+  .ms-item.active::after {
+    content: ''; position: absolute;
+    bottom: 6px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--green);
+  }
+  /* LAYOUT */
   .grid2 { grid-template-columns: 1fr !important; }
   .metrics { grid-template-columns: repeat(2,1fr) !important; }
   .form-grid { grid-template-columns: 1fr !important; }
@@ -158,11 +181,6 @@ body {
   .card { padding: .875rem 1rem; }
   .ativo-head { flex-wrap: wrap; gap: 8px; }
   .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-}
-@media (display-mode: standalone) {
-  .mobile-primary { padding-bottom: env(safe-area-inset-bottom, 20px); }
-  .mobile-secondary { bottom: calc(60px + env(safe-area-inset-bottom, 20px)); }
-  .main { padding-bottom: calc(140px + env(safe-area-inset-bottom, 20px)); }
 }
 @media (min-width: 769px) {
   .mobile-primary, .mobile-secondary { display: none !important; }
@@ -306,7 +324,8 @@ tr.past td { color: var(--text3); }
 .cal-cell {
   background: var(--bg3); border: 0.5px solid var(--border);
   border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; cursor: pointer;
-  transition: all .15s;
+  transition: all .15s; min-height: 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 .cal-cell:hover { border-color: var(--border2); }
 .cal-cell.has-cost { border-color: rgba(240,176,96,.3); background: rgba(240,176,96,.06); }
@@ -317,6 +336,41 @@ tr.past td { color: var(--text3); }
 .cal-cell-val { font-size: 12px; font-family: var(--mono); margin-top: 4px; color: var(--text2); }
 .cal-cell.has-cost .cal-cell-val { color: var(--amber); }
 .cal-cell.urgent .cal-cell-val { color: var(--red); }
+
+/* MONTHLY COST CALENDAR */
+.cal-month-view { display: none; }
+.cal-month-view.active { display: block; }
+.cal-annual-view.hidden { display: none; }
+.cal-month-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+.cal-month-heading { flex: 1; text-align: center; font-size: 15px; font-weight: 500; }
+.cal-nav-btn { width: 34px; height: 32px; padding: 0; font-size: 19px; line-height: 1; }
+.cal-back-btn { font-size: 12px; white-space: nowrap; }
+.month-weekdays, .month-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.month-weekdays { margin-bottom: 5px; }
+.month-weekday { padding: 5px 3px; color: var(--text3); text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.month-days { border: .5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.month-day { min-height: 118px; padding: 6px; background: var(--bg3); border-right: .5px solid var(--border); border-bottom: .5px solid var(--border); overflow: hidden; }
+.month-day:nth-child(7n) { border-right: none; }
+.month-day:nth-last-child(-n+7) { border-bottom: none; }
+.month-day.empty { background: rgba(255,255,255,.012); }
+.month-day.today { box-shadow: inset 0 0 0 1px var(--green); background: rgba(45,212,160,.055); }
+.month-day-number { color: var(--text3); font-family: var(--mono); font-size: 11px; margin-bottom: 5px; }
+.month-day.today .month-day-number { color: var(--green); }
+.month-payment { display: flex; align-items: center; gap: 4px; min-width: 0; margin: 3px 0; padding: 3px 4px; border-radius: 4px; background: rgba(255,255,255,.045); color: var(--text2); font-size: 10px; }
+.month-payment-icon { width: 17px; height: 17px; border-radius: 50%; flex: 0 0 17px; display: grid; place-items: center; overflow: hidden; color: var(--bg); font-size: 8px; font-weight: 500; text-transform: uppercase; }
+.month-payment-icon img { width: 100%; height: 100%; object-fit: cover; }
+.month-payment-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.month-payment-value { margin-left: auto; color: var(--text); font-family: var(--mono); font-size: 9px; white-space: nowrap; }
+.month-more { color: var(--text3); font-size: 10px; padding: 2px 4px; }
+@media (max-width: 768px) {
+  .cal-grid { grid-template-columns: repeat(3, 1fr); }
+  .month-day { min-height: 92px; padding: 4px; }
+  .month-payment { gap: 3px; padding: 3px; }
+  .month-payment-icon { width: 15px; height: 15px; flex-basis: 15px; font-size: 7px; }
+  .month-payment-name { display: none; }
+  .month-payment-value { margin-left: 0; font-size: 8px; }
+  .month-weekday { font-size: 9px; }
+}
 
 /* ALERT BANNER */
 .alert-banner {
@@ -347,9 +401,6 @@ tr.past td { color: var(--text3); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 999px; }
-
-/* iOS: prevent zoom on input focus */
-input, select, textarea { font-size: 16px !important; }
 </style>
 
 <style>
@@ -497,11 +548,11 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Nova meta</div>
     <div class="form-grid">
-      <div class="form-group full"><label>Nome da meta</label><input type="text" id="p-nome" placeholder="ex: Férias no Algarve, Fundo de emergência..."></div>
+      <div class="form-group full"><label>Nome da meta</label><input type="text" id="p-nome"></div>
       <div class="form-group"><label>Objetivo total (€)</label><input type="number" id="p-obj" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Já poupado (€)</label><input type="number" id="p-atual" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Reforço mensal (€)</label><input type="number" id="p-reforco" placeholder="0.00 — opcional" min="0" step="0.01"></div>
-      <div class="form-group"><label>Dia do reforço</label><input type="number" id="p-dia" placeholder="ex: 1" min="1" max="31"></div>
+      <div class="form-group"><label>Dia do reforço</label><input type="number" id="p-dia" min="1" max="31"></div>
       <div class="form-group"><label>Categoria da despesa</label>
         <select id="p-cat">
           <option value="">— sem categoria —</option>
@@ -521,21 +572,23 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Adicionar crédito</div>
     <div class="form-grid">
-      <div class="form-group full"><label>Nome / banco</label><input type="text" id="c-nome" placeholder="ex: Crédito pessoal BPI"></div>
+      <div class="form-group full"><label>Nome / banco</label><input type="text" id="c-nome"></div>
       <div class="form-group"><label>Tipo</label><select id="c-tipo"><option>Crédito pessoal</option><option>Cartão de crédito</option><option>Hipoteca</option><option>Leasing</option><option>Outro</option></select></div>
-      <div class="form-group"><label>Capital em dívida (€)</label><input type="number" id="c-divida" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Taxa anual (%)</label><input type="number" id="c-taxa" placeholder="ex: 7.5" min="0" step="0.01"></div>
+      <div class="form-group"><label>Capital inicial (€)</label><input type="number" id="c-divida" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Taxa anual (%)</label><input type="number" id="c-taxa" min="0" step="0.01"></div>
       <div class="form-group"><label>Prestação mensal (€)</label><input type="number" id="c-prest" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Prazo restante (meses)</label><input type="number" id="c-prazo" placeholder="ex: 36" min="1"></div>
-      <div class="form-group"><label>Dia de vencimento</label><input type="number" id="c-dia" placeholder="ex: 15" min="1" max="31"></div>
+      <div class="form-group"><label>Prazo total (meses)</label><input type="number" id="c-prazo" min="1"></div>
+      <div class="form-group"><label>Dia de vencimento</label><input type="number" id="c-dia" min="1" max="31"></div>
       <div class="form-group"><label>Data início (aaaa-mm)</label><input type="month" id="c-inicio"></div>
+      <div class="form-group"><label>Juros no mês inicial (€)</label><input type="number" id="c-juros-inic" value="0" min="0" step="0.01"></div>
+      <div class="form-group"><label>IS sobre juros (%)</label><input type="number" id="c-is-juros" value="4" min="0" step="0.01"></div>
       <div class="form-group"><label>Conta a debitar prestação</label><select id="c-conta"><option value="">— sem conta —</option></select></div>
     </div>
     <div style="margin-bottom:12px">
       <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Comissões e encargos</div>
       <div id="lista-encargos-form" style="margin-bottom:10px"></div>
       <div class="form-grid" id="encargo-form-fields">
-        <div class="form-group"><label>Descrição do encargo</label><input type="text" id="e-desc" placeholder="ex: Comissão de dossier, Seguro de vida..."></div>
+        <div class="form-group"><label>Descrição do encargo</label><input type="text" id="e-desc"></div>
         <div class="form-group"><label>Valor (€)</label><input type="number" id="e-valor" placeholder="0.00" min="0" step="0.01"></div>
         <div class="form-group"><label>Tipo</label>
           <select id="e-tipo">
@@ -564,7 +617,7 @@ svg[viewBox="0 0 24 24"] {
   <div class="metrics" id="mapa-metrics"></div>
   <div class="card">
     <div class="card-title">Amortização mensal</div>
-    <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Data</th><th>Prestação</th><th>Capital</th><th>Juros</th><th>Saldo devedor</th></tr></thead><tbody id="mapa-body"></tbody></table></div>
+    <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Data</th><th>Prestação</th><th>Capital</th><th>Juros</th><th>IS</th><th>Saldo devedor</th></tr></thead><tbody id="mapa-body"></tbody></table></div>
   </div>
 </div>
 
@@ -574,10 +627,10 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Adicionar conta</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome / banco</label><input type="text" id="cn-nome" placeholder="ex: Conta à ordem ActivoBank"></div>
+      <div class="form-group"><label>Nome / banco</label><input type="text" id="cn-nome"></div>
       <div class="form-group"><label>Saldo disponível (€)</label><input type="number" id="cn-saldo" placeholder="0.00" step="0.01"></div>
       <div class="form-group"><label>Tipo</label><select id="cn-tipo"><option>Conta à ordem</option><option>Conta poupança</option><option>Conta a prazo</option><option>Conta cofre</option></select></div>
-      <div class="form-group"><label>Taxa de juro anual (% — se aplicável)</label><input type="number" id="cn-taxa" placeholder="ex: 2.5 — deixar 0 se não aplicável" min="0" step="0.01"></div>
+      <div class="form-group"><label>Taxa de juro anual (% — se aplicável)</label><input type="number" id="cn-taxa" min="0" step="0.01"></div>
       <div class="form-group"><label>Periodicidade do juro</label>
         <select id="cn-juro-periodo">
           <option value="nenhum">Sem juros</option>
@@ -587,22 +640,12 @@ svg[viewBox="0 0 24 24"] {
         </select>
       </div>
       <div class="form-group"><label>Comissão mensal (€ — ex: manutenção, cartão)</label><input type="number" id="cn-comissao" placeholder="0.00 — deixar 0 se não há" min="0" step="0.01"></div>
-      <div class="form-group"><label>Dia da comissão</label><input type="number" id="cn-comissao-dia" placeholder="ex: 1" min="1" max="31"></div>
-      <div class="form-group"><label>Descrição da comissão</label><input type="text" id="cn-comissao-desc" placeholder="ex: Manutenção de conta, Anuidade cartão..."></div>
+      <div class="form-group"><label>Dia da comissão</label><input type="number" id="cn-comissao-dia" min="1" max="31"></div>
+      <div class="form-group"><label>Descrição da comissão</label><input type="text" id="cn-comissao-desc"></div>
     </div>
     <button class="btn-primary" onclick="addConta()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
   </div>
   <div id="lista-contas"></div>
-  <div class="card" style="margin-top:0">
-    <div class="card-title">Transferência entre contas</div>
-    <div class="form-grid">
-      <div class="form-group"><label>De</label><select id="tr-origem"><option value="">— selecionar —</option></select></div>
-      <div class="form-group"><label>Para</label><select id="tr-destino"><option value="">— selecionar —</option></select></div>
-      <div class="form-group"><label>Valor (€)</label><input type="number" id="tr-valor" placeholder="0.00" min="0" step="0.01" inputmode="decimal"></div>
-    </div>
-    <button class="btn-primary" onclick="fazerTransferencia()">Transferir</button>
-    <span id="tr-ok" style="font-size:12px;color:var(--green);margin-left:12px;display:none">✓ Transferência registada</span>
-  </div>
 </div>
 
 <!-- ATIVOS -->
@@ -611,11 +654,11 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Novo ativo</div>
     <div class="form-grid">
-      <div class="form-group full"><label>Descrição</label><input type="text" id="at-nome" placeholder="ex: Automóvel Peugeot 308"></div>
+      <div class="form-group full"><label>Descrição</label><input type="text" id="at-nome"></div>
       <div class="form-group"><label>Tipo</label><select id="at-tipo"><option>Automóvel</option><option>Imóvel</option><option>Equipamento</option><option>Outro</option></select></div>
       <div class="form-group"><label>Valor de aquisição (€)</label><input type="number" id="at-aq" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Valor de mercado (€)</label><input type="number" id="at-mkt" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Ano de aquisição</label><input type="number" id="at-ano" placeholder="ex: 2020" min="1900" max="2099"></div>
+      <div class="form-group"><label>Ano de aquisição</label><input type="number" id="at-ano" min="1900" max="2099"></div>
     </div>
     <button class="btn-primary" onclick="addAtivo()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Criar ativo</button>
   </div>
@@ -627,8 +670,20 @@ svg[viewBox="0 0 24 24"] {
   <div class="page-title">Calendário de custos</div>
   <div class="metrics" id="cal-metrics"></div>
   <div class="card">
-    <div class="card-title">Visão anual</div>
-    <div class="cal-grid" id="cal-grid"></div>
+    <div id="cal-annual-view" class="cal-annual-view">
+      <div class="card-title">Visão anual <span style="font-size:10px;text-transform:none;letter-spacing:0">— duplo clique para abrir o mês</span></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div id="cal-month-view" class="cal-month-view" aria-live="polite">
+      <div class="cal-month-nav">
+        <button type="button" class="btn-ghost cal-back-btn" onclick="closeMesCal()">← Ano</button>
+        <button type="button" class="btn-ghost cal-nav-btn" onclick="moveMesCal(-1)" aria-label="Mês anterior">‹</button>
+        <div class="cal-month-heading" id="cal-month-heading"></div>
+        <button type="button" class="btn-ghost cal-nav-btn" onclick="moveMesCal(1)" aria-label="Mês seguinte">›</button>
+      </div>
+      <div class="month-weekdays" aria-hidden="true"><div class="month-weekday">Seg</div><div class="month-weekday">Ter</div><div class="month-weekday">Qua</div><div class="month-weekday">Qui</div><div class="month-weekday">Sex</div><div class="month-weekday">Sáb</div><div class="month-weekday">Dom</div></div>
+      <div class="month-days" id="month-days"></div>
+    </div>
   </div>
   <div class="card">
     <div class="card-title" id="cal-detail-title">Próximos pagamentos</div>
@@ -642,10 +697,12 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Registar investimento</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome / ticker</label><input type="text" id="i-nome" placeholder="ex: ETF MSCI World"></div>
+      <div class="form-group"><label>Nome / ticker</label><input type="text" id="i-nome" placeholder="ex: IWDA, BTC"></div>
       <div class="form-group"><label>Tipo</label><select id="i-tipo"><option>ETF</option><option>Ações</option><option>Criptomoeda</option><option>Obrigações</option><option>Imobiliário</option><option>Depósito a Prazo</option><option>Outro</option></select></div>
       <div class="form-group"><label>Valor investido (€)</label><input type="number" id="i-inv" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Valor atual (€)</label><input type="number" id="i-atual" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Reforço mensal (€) · opcional</label><input type="number" id="i-mensal" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Dia do reforço</label><input type="number" id="i-dia" min="1" max="31" placeholder="ex: 5"></div>
     </div>
     <button class="btn-primary" onclick="addInv()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
   </div>
@@ -659,12 +716,13 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Adicionar</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome / gestora</label><input type="text" id="ppr-nome" placeholder="ex: PPR Millenniumbcp"></div>
+      <div class="form-group"><label>Nome / gestora</label><input type="text" id="ppr-nome"></div>
       <div class="form-group"><label>Tipo</label><select id="ppr-tipo"><option>PPR</option><option>Fundo de pensões</option><option>Plano reforma empresa</option><option>Outro</option></select></div>
       <div class="form-group"><label>Total contribuído (€)</label><input type="number" id="ppr-contrib" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Valor atual (€)</label><input type="number" id="ppr-atual" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Contribuição mensal (€)</label><input type="number" id="ppr-mensal" placeholder="0.00" min="0" step="0.01"></div>
-      <div class="form-group"><label>Ano de resgate</label><input type="number" id="ppr-ano" placeholder="ex: 2050" min="2024" max="2100"></div>
+      <div class="form-group"><label>Dia do reforço</label><input type="number" id="ppr-dia" min="1" max="31" placeholder="ex: 5"></div>
+      <div class="form-group"><label>Ano de resgate</label><input type="number" id="ppr-ano" min="2024" max="2100"></div>
     </div>
     <button class="btn-primary" onclick="addPPR()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
   </div>
@@ -678,7 +736,7 @@ svg[viewBox="0 0 24 24"] {
   <div class="card">
     <div class="card-title">Nova subscrição</div>
     <div class="form-grid">
-      <div class="form-group"><label>Nome</label><input type="text" id="sub-nome" placeholder="ex: Netflix, Spotify, Adobe..."></div>
+      <div class="form-group"><label>Nome</label><input type="text" id="sub-nome"></div>
       <div class="form-group"><label>Valor (€)</label><input type="number" id="sub-valor" placeholder="0.00" min="0" step="0.01"></div>
       <div class="form-group"><label>Periodicidade</label>
         <select id="sub-periodo">
@@ -688,15 +746,15 @@ svg[viewBox="0 0 24 24"] {
           <option value="semestral">Semestral</option>
         </select>
       </div>
-      <div class="form-group"><label>Dia de cobrança</label><input type="number" id="sub-dia" placeholder="ex: 5" min="1" max="31"></div>
-      <div class="form-group"><label>Mês (anual/trimestral)</label><input type="number" id="sub-mes" placeholder="ex: 3" min="1" max="12"></div>
+      <div class="form-group"><label>Dia de cobrança</label><input type="number" id="sub-dia" min="1" max="31"></div>
+      <div class="form-group"><label>Mês (anual/trimestral)</label><input type="number" id="sub-mes" min="1" max="12"></div>
       <div class="form-group"><label>Categoria</label>
         <select id="sub-cat">
           <option>Entretenimento</option><option>Produtividade</option><option>Saúde</option>
           <option>Educação</option><option>Software</option><option>Outro</option>
         </select>
       </div>
-      <div class="form-group full"><label>Notas</label><input type="text" id="sub-notas" placeholder="ex: Plano familiar, partilhado com..."></div>
+      <div class="form-group full"><label>Notas</label><input type="text" id="sub-notas"></div>
       <div class="form-group"><label>Conta a debitar</label><select id="sub-conta"><option value="">— sem conta —</option></select></div>
     </div>
     <button class="btn-primary" onclick="addSub()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
@@ -744,7 +802,7 @@ const SUB_COLS={Entretenimento:'#f060c0',Produtividade:'#60a0f0',Saúde:'#2dd4a0
 function ld(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
 function sv(k,v){localStorage.setItem(k,JSON.stringify(v))}
 function fmt(n){return(+(n||0)).toLocaleString('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function fmtK(n){n=+(n||0);return n>=100000?(n/1000).toFixed(0)+'K':fmt(n)}
+function fmtK(n){n=+(n||0);return n>=1000?(n/1000).toFixed(1)+'K':fmt(n)}
 
 
 // ── MIGRAÇÃO DE DADOS DE VERSÕES ANTERIORES ──────────────
@@ -809,6 +867,18 @@ let ativos=ld('fp_ativos',[]);
 let investimentos=ld('fp_inv',[]);
 let pprs=ld('fp_pprs',[]);
 
+// Correção única do crédito registado com os dados confirmados pelo utilizador:
+// maio foi apenas um período parcial de juros; as prestações regulares começam em junho.
+let creditoCorrigido=false;
+creditos=creditos.map(c=>{
+  if(c.inicio==='2026-05' && +c.divida===25000 && +c.prest===393 && +c.taxa===7.9 && c.jurosInicial===undefined){
+    creditoCorrigido=true;
+    return {...c,taxa:7.95,jurosInicial:16.56,isJuros:4};
+  }
+  return c;
+});
+if(creditoCorrigido) sv('fp_cred',creditos);
+
 const hoje=new Date();
 let vYear=hoje.getFullYear(), vMonth=hoje.getMonth();
 
@@ -817,6 +887,7 @@ let catsChart=null;
 let evolucaoChart=null;
 let snapshots=ld('fp_snapshots',[]);
 let subscricoes=ld('fp_subs',[]);
+let calMesAberto=null;
 
 function goto(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -827,7 +898,8 @@ function goto(id){
     dashboard:renderDash, transacoes:renderTx, orcamento:renderOrc,
     poupancas:renderMetas, creditos:renderCreditos, mapa:renderMapaInit,
     contas:renderContas, ativos:renderAtivos, calendario:renderCal,
-    investimentos:renderInv, ppr:renderPPR, subscricoes:renderSubs, backup:renderStorageInfo
+    investimentos:renderInv, ppr:renderPPR, subscricoes:renderSubs,
+    backup:renderStorageInfo
   };
   if(renders[id])renders[id]();
 }
@@ -851,7 +923,7 @@ function calcPatrimonio(){
     +pprs.reduce((s,p)=>s+p.atual,0);
 }
 function calcDivida(){
-  return creditos.reduce((s,c)=>s+c.divida,0);
+  return creditos.reduce((s,c)=>s+estadoCreditoHoje(c).saldo,0);
 }
 
 function registarSnapshotMes(){
@@ -934,6 +1006,47 @@ function reconstruirHistorico(){
       +pprs.reduce((s,p)=>s+(p.contrib||0),0); // contribuições
 
     pontos.push({mes:chave,patrimonio:patrimonioRec,divida:dividaRec,real:false});
+    cur.setMonth(cur.getMonth()+1);
+  }
+  return pontos;
+}
+
+// Versão baseada nos registos reais: avaliações e amortizações atualizam a linha.
+function valorHistorico(item,chaveBase,referencia){
+  const registos=(item.atualizacoes||[]).filter(r=>new Date(r.data+'T23:59:59')<=referencia).sort((a,b)=>a.data.localeCompare(b.data));
+  return registos.length?+registos[registos.length-1].valor||0:+item[chaveBase]||0;
+}
+function saldoCreditoNaData(c,referencia){
+  const plano=planoCredito(c);
+  const pagos=plano.filter(r=>r.data<=referencia);
+  let saldo=pagos.length?pagos[pagos.length-1].saldo:(+c.divida||0);
+  const aplicadas=new Set(pagos.flatMap(r=>(r.amortizacoes||[]).map(a=>a.id)));
+  (c.amortizacoes||[]).forEach(a=>{
+    if(new Date(a.data+'T00:00:00')<=referencia&&!aplicadas.has(a.id)) saldo-=+a.valor||0;
+  });
+  return +Math.max(0,saldo).toFixed(2);
+}
+function reconstruirHistorico(){
+  const pontos=[];
+  if(!creditos.length&&!ativos.length&&!investimentos.length&&!pprs.length)return pontos;
+  let minDate=new Date(hoje.getFullYear(),hoje.getMonth(),1);
+  creditos.forEach(c=>{if(c.inicio){const d=new Date(c.inicio+'-01');if(d<minDate)minDate=d;}});
+  ativos.forEach(a=>{if(a.ano){const d=new Date(+a.ano,0,1);if(d<minDate)minDate=d;}});
+  [ativos,investimentos,pprs].flat().forEach(item=>(item.atualizacoes||[]).forEach(r=>{const d=new Date(r.data+'T00:00:00');if(d<minDate)minDate=d;}));
+  const limite=new Date(hoje.getFullYear(),hoje.getMonth()-24,1);
+  if(minDate<limite)minDate=limite;
+  let cur=new Date(minDate.getFullYear(),minDate.getMonth(),1);
+  while(cur<=hoje){
+    const ano=cur.getFullYear(), mes=cur.getMonth();
+    const atual=ano===hoje.getFullYear()&&mes===hoje.getMonth();
+    const referencia=atual?hoje:new Date(ano,mes+1,0,23,59,59);
+    const patrimonio=atual?calcPatrimonio():
+      contas.reduce((s,c)=>s+(+c.saldo||0),0)
+      +ativos.filter(a=>(+a.ano||ano)<=ano).reduce((s,a)=>s+valorHistorico(a,'aq',referencia),0)
+      +investimentos.reduce((s,i)=>s+valorHistorico(i,'inv',referencia),0)
+      +pprs.reduce((s,p)=>s+valorHistorico(p,'contrib',referencia),0);
+    const divida=atual?calcDivida():creditos.reduce((s,c)=>s+saldoCreditoNaData(c,referencia),0);
+    pontos.push({mes:`${ano}-${String(mes+1).padStart(2,'0')}`,patrimonio,divida,real:atual});
     cur.setMonth(cur.getMonth()+1);
   }
   return pontos;
@@ -1062,11 +1175,11 @@ function renderDashOrcamento(){
 function renderDash(){
   document.getElementById('dash-mes-label').textContent=MESES_FULL[vMonth]+' '+vYear;
   const txs=mesAtual();
-  const rec=txs.filter(t=>t.tipo==='receita'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0);
-  const desp=txs.filter(t=>t.tipo==='despesa'&&!t.isTransferencia).reduce((s,t)=>s+t.valor,0);
+  const rec=txs.filter(t=>t.tipo==='receita').reduce((s,t)=>s+t.valor,0);
+  const desp=txs.filter(t=>t.tipo==='despesa').reduce((s,t)=>s+t.valor,0);
   const saldo=rec-desp;
-  const divida=creditos.reduce((s,c)=>s+c.divida,0);
-  const prestMes=creditos.reduce((s,c)=>s+c.prest,0);
+  const divida=creditos.reduce((s,c)=>s+estadoCreditoHoje(c).saldo,0);
+  const prestMes=creditos.reduce((s,c)=>s+(estadoCreditoHoje(c).futuros[0]?.prest||0),0);
   const totalContas=contas.reduce((s,c)=>s+saldoEfetivo(c.id),0);
   const totalAtMkt=ativos.reduce((s,a)=>s+a.mkt,0);
   const totalPPR=pprs.reduce((s,p)=>s+p.atual,0);
@@ -1196,8 +1309,6 @@ function renderDash(){
 function populaSelectContas(){
   const opts='<option value="">— sem conta —</option>'+contas.map(c=>`<option value="${c.id}">${c.nome}</option>`).join('');
   ['t-conta','sub-conta','c-conta'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
-  const optsT='<option value="">— selecionar —</option>'+contas.map(c=>`<option value="${c.id}">${c.nome} (€${fmt(saldoEfetivo(c.id))})</option>`).join('');
-  ['tr-origem','tr-destino'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=optsT;});
 }
 
 function saldoEfetivo(contaId){
@@ -1233,9 +1344,9 @@ function editTx(id){
   const contaOpts='<option value="">— sem conta —</option>'+contas.map(c=>`<option value="${c.id}" ${c.id===t.contaId?'selected':''}>${c.nome}</option>`).join('');
   const iStyle='background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:12px;padding:6px 8px;outline:none;width:100%';
   document.getElementById('tx-row-'+id).innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0;align-items:end;width:100%">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:8px 0;align-items:end;width:100%">
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">TIPO</div><select id="et-tipo-${id}" style="${iStyle}"><option value="despesa" ${t.tipo==='despesa'?'selected':''}>Despesa</option><option value="receita" ${t.tipo==='receita'?'selected':''}>Receita</option></select></div>
-      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">VALOR (€)</div><input type="number" id="et-valor-${id}" value="${t.valor}" style="${iStyle};font-family:var(--mono)" inputmode="decimal"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">VALOR (€)</div><input type="number" id="et-valor-${id}" value="${t.valor}" style="${iStyle};font-family:var(--mono)"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">DATA</div><input type="date" id="et-data-${id}" value="${t.data}" style="${iStyle}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">CONTA</div><select id="et-conta-${id}" style="${iStyle}">${contaOpts}</select></div>
     </div>
@@ -1441,7 +1552,7 @@ function renderCreditos(){
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:12px">
-        <div><div style="color:var(--text3);margin-bottom:2px">Prestação</div><div style="font-family:var(--mono)">€${fmt(c.prest)}/mês</div></div>
+        <div><div style="color:var(--text3);margin-bottom:2px">Próxima prestação</div><div style="font-family:var(--mono)">€${fmt(estado.futuros[0]?.prest||0)}/mês</div></div>
         <div><div style="color:var(--text3);margin-bottom:2px">Taxa</div><div style="font-family:var(--mono)">${c.taxa}% a.a.</div></div>
         <div><div style="color:var(--text3);margin-bottom:2px">Prazo restante</div><div style="font-family:var(--mono)">${c.prazo} meses</div></div>
         <div><div style="color:var(--text3);margin-bottom:2px">Custo total</div><div style="font-family:var(--mono);color:var(--red)">€${fmt(totalJ)}</div></div>
@@ -1451,6 +1562,33 @@ function renderCreditos(){
       </div>`:''}
     </div>`;
   }).join('');
+}
+
+function abrirAmortizacao(id){
+  const c=creditos.find(x=>x.id===id);
+  const el=document.getElementById('amort-form-'+id);
+  if(!c||!el)return;
+  const hojeISO=hoje.toISOString().slice(0,10);
+  el.innerHTML=`<div class="form-inline" style="margin-top:12px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Registar amortização</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"><div class="form-group"><label>Valor (€)</label><input type="number" id="am-valor-${id}" min="0.01" step="0.01" placeholder="0.00"></div><div class="form-group"><label>Data</label><input type="date" id="am-data-${id}" value="${hojeISO}"></div><div class="form-group"><label>Comissão (€)</label><input type="number" id="am-comissao-${id}" value="0" min="0" step="0.01"></div><div class="form-group"><label>Depois da amortização</label><select id="am-modo-${id}"><option value="prazo">Reduzir prazo</option><option value="prestacao">Reduzir prestação</option></select></div></div><div style="display:flex;gap:8px;margin-top:6px"><button class="btn-primary" onclick="guardarAmortizacao(${id})" style="font-size:12px;padding:6px 12px">Guardar amortização</button><button class="btn-ghost" onclick="document.getElementById('amort-form-${id}').innerHTML=''" style="font-size:12px;padding:6px 10px">Cancelar</button></div><div class="sim-note">A amortização reduz o capital em dívida. A comissão é registada no histórico, mas não abate ao capital.</div></div>`;
+}
+function guardarAmortizacao(id){
+  const valor=parseFloat(document.getElementById('am-valor-'+id).value)||0;
+  const data=document.getElementById('am-data-'+id).value;
+  const comissao=parseFloat(document.getElementById('am-comissao-'+id).value)||0;
+  const modo=document.getElementById('am-modo-'+id).value;
+  const c=creditos.find(x=>x.id===id);
+  if(!c||!valor||!data)return;
+  const saldo=estadoCreditoHoje(c).saldo;
+  if(valor>saldo){alert(`O valor não pode exceder o capital em dívida (€${fmt(saldo)}).`);return;}
+  const amortizacao={id:Date.now(),data,valor,comissao,modo};
+  creditos=creditos.map(x=>x.id===id?{...x,amortizacoes:[...(x.amortizacoes||[]),amortizacao]}:x);
+  sv('fp_cred',creditos);
+  renderCreditos();
+}
+function apagarAmortizacao(creditoId,amortizacaoId){
+  creditos=creditos.map(c=>c.id===creditoId?{...c,amortizacoes:(c.amortizacoes||[]).filter(a=>a.id!==amortizacaoId)}:c);
+  sv('fp_cred',creditos);
+  renderCreditos();
 }
 
 function editCred(id){
@@ -1494,6 +1632,60 @@ function saveCred(id){
 }
 
 
+function planoCredito(c){
+  const inicio=c.inicio?c.inicio.split('-').map(Number):[hoje.getFullYear(),hoje.getMonth()+1];
+  const taxa=(+c.taxa||0)/1200;
+  const taxaIS=(c.isJuros===undefined?4:+c.isJuros)/100;
+  const dia=Math.max(1,Math.min(31,+c.dia||1));
+  let saldo=+c.divida||0;
+  const rows=[];
+  const amortizacoes=(c.amortizacoes||[]).map(a=>({...a,dataObj:new Date(a.data+'T00:00:00')})).sort((a,b)=>a.dataObj-b.dataObj);
+  let proximaAmortizacao=0;
+  let prestacaoAtual=+c.prest||0;
+  const dataInicial=new Date(inicio[0],inicio[1]-1,Math.min(dia,new Date(inicio[0],inicio[1],0).getDate()));
+  const jurosInicial=+c.jurosInicial||0;
+  if(jurosInicial>0){
+    const selo=+(jurosInicial*taxaIS).toFixed(2);
+    rows.push({n:1,data:dataInicial,label:dataInicial.toLocaleDateString('pt-PT',{month:'short',year:'numeric'}),prest:+(jurosInicial+selo).toFixed(2),cap:0,juros:jurosInicial,selo,saldo,inicial:true});
+  }
+  for(let i=0;i<(+c.prazo||0)&&saldo>0.005;i++){
+    const data=new Date(inicio[0],inicio[1]+i,Math.min(dia,new Date(inicio[0],inicio[1]+i+1,0).getDate()));
+    const aplicadas=[];
+    while(proximaAmortizacao<amortizacoes.length&&amortizacoes[proximaAmortizacao].dataObj<=data){
+      const a=amortizacoes[proximaAmortizacao++];
+      const valor=Math.min(saldo,+a.valor||0);
+      saldo=+Math.max(0,saldo-valor).toFixed(2);
+      aplicadas.push({...a,valorAplicado:valor});
+      if(a.modo==='prestacao'){
+        const restantes=Math.max(1,(+c.prazo||0)-i);
+        const taxaEfetiva=taxa*(1+taxaIS);
+        prestacaoAtual=taxaEfetiva>0?saldo*taxaEfetiva/(1-Math.pow(1+taxaEfetiva,-restantes)):saldo/restantes;
+        prestacaoAtual=+prestacaoAtual.toFixed(2);
+      }
+    }
+    const juros=+(saldo*taxa).toFixed(2);
+    const selo=+(juros*taxaIS).toFixed(2);
+    const prestacao=Math.min(prestacaoAtual,+(saldo+juros+selo).toFixed(2));
+    const capital=+Math.max(0,prestacao-juros-selo).toFixed(2);
+    saldo=+Math.max(0,saldo-capital).toFixed(2);
+    rows.push({n:rows.length+1,data,label:data.toLocaleDateString('pt-PT',{month:'short',year:'numeric'}),prest:prestacao,cap:capital,juros,selo,saldo,amortizacoes:aplicadas});
+    if(!prestacao||capital<=0) break;
+  }
+  return rows;
+}
+function estadoCreditoHoje(c){
+  const hojeSemHora=new Date(hoje.getFullYear(),hoje.getMonth(),hoje.getDate());
+  const plano=planoCredito(c);
+  const pagos=plano.filter(r=>r.data<hojeSemHora);
+  const futuros=plano.filter(r=>r.data>=hojeSemHora);
+  let saldo=pagos.length?pagos[pagos.length-1].saldo:(+c.divida||0);
+  const aplicadas=new Set(pagos.flatMap(r=>(r.amortizacoes||[]).map(a=>a.id)));
+  (c.amortizacoes||[]).forEach(a=>{
+    const data=new Date(a.data+'T00:00:00');
+    if(data<=hojeSemHora&&!aplicadas.has(a.id)) saldo=+Math.max(0,saldo-(+a.valor||0)).toFixed(2);
+  });
+  return {plano,pagos,futuros,saldo};
+}
 function renderMapaInit(){
   const sel=document.getElementById('mapa-sel');
   sel.innerHTML=creditos.length?creditos.map(c=>`<option value="${c.id}">${c.nome}</option>`):'<option>Sem créditos</option>';
@@ -1504,61 +1696,29 @@ function renderMapa(){
   const id=parseInt(document.getElementById('mapa-sel').value);
   const c=creditos.find(x=>x.id===id);
   if(!c)return;
-  const tm=c.taxa/100/12;
-
-  // Determinar mês de início
-  let startAno=hoje.getFullYear(), startMes=hoje.getMonth();
-  if(c.inicio){
-    const parts=c.inicio.split('-');
-    startAno=parseInt(parts[0]);
-    startMes=parseInt(parts[1])-1;
-  }
-
-  // Calcular prazo total original (prazo restante + meses já decorridos)
-  const mesesDecorridos=(hoje.getFullYear()-startAno)*12+(hoje.getMonth()-startMes);
-  const prazoTotal=c.prazo+Math.max(mesesDecorridos,0);
-
-  // Reconstruir saldo original para começar do início
-  // Andar para trás a partir do saldo atual
-  let saldoOriginal=c.divida;
-  for(let i=0;i<Math.max(mesesDecorridos,0);i++){
-    const j=saldoOriginal*tm;
-    const cap=c.prest-j;
-    saldoOriginal=saldoOriginal+cap; // desfazer amortização
-  }
-
-  let saldo=saldoOriginal, totalJ=0;
-  const rows=[];
-
-  for(let i=1;i<=prazoTotal;i++){
-    const juros=parseFloat((saldo*tm).toFixed(2));
-    const cap=parseFloat(Math.min(c.prest-juros,saldo).toFixed(2));
-    saldo=parseFloat(Math.max(saldo-cap,0).toFixed(2));
-    totalJ+=juros;
-
-    const mesIdx=startMes+(i-1);
-    const d=new Date(startAno+Math.floor(mesIdx/12), mesIdx%12, c.dia||1);
-    const isPast=d<new Date(hoje.getFullYear(),hoje.getMonth(),1);
-    const isCur=d.getFullYear()===hoje.getFullYear()&&d.getMonth()===hoje.getMonth();
-
-    rows.push({n:i,label:d.toLocaleDateString('pt-PT',{month:'short',year:'numeric'}),prest:c.prest,cap,juros,saldo,past:isPast,cur:isCur});
-  }
-
-  const efetiva=c.divida>0?((totalJ/c.divida)*100).toFixed(1):0;
+  const estado=estadoCreditoHoje(c);
+  const rows=estado.futuros;
+  const totalJ=rows.reduce((s,r)=>s+r.juros,0);
+  const totalIS=rows.reduce((s,r)=>s+(r.selo||0),0);
+  const totalPagar=rows.reduce((s,r)=>s+r.prest,0);
+  const prestacaoSeguinte=rows[0]?.prest||0;
+  const efetiva=estado.saldo>0?(((totalJ+totalIS)/estado.saldo)*100).toFixed(1):0;
   document.getElementById('mapa-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Capital em dívida</div><div class="metric-value red">€${fmtK(c.divida)}</div></div>
-    <div class="metric"><div class="metric-label">Prestação mensal</div><div class="metric-value amber">€${fmtK(c.prest)}</div></div>
-    <div class="metric"><div class="metric-label">Total a pagar</div><div class="metric-value red">€${fmtK(c.prest*prazoTotal)}</div></div>
-    <div class="metric"><div class="metric-label">Total em juros</div><div class="metric-value red">€${fmtK(totalJ)}</div></div>
+    <div class="metric"><div class="metric-label">Capital em dívida hoje</div><div class="metric-value red">€${fmtK(estado.saldo)}</div></div>
+    <div class="metric"><div class="metric-label">Próxima prestação</div><div class="metric-value amber">€${fmtK(prestacaoSeguinte)}</div></div>
+    <div class="metric"><div class="metric-label">Total por pagar</div><div class="metric-value red">€${fmtK(totalPagar)}</div></div>
+    <div class="metric"><div class="metric-label">Juros por pagar</div><div class="metric-value red">€${fmtK(totalJ)}</div></div>
+    <div class="metric"><div class="metric-label">IS por pagar</div><div class="metric-value red">€${fmtK(totalIS)}</div></div>
     <div class="metric"><div class="metric-label">Taxa anual</div><div class="metric-value blue">${c.taxa}%</div></div>
     <div class="metric"><div class="metric-label">Custo real</div><div class="metric-value red">${efetiva}%</div></div>
   `;
   document.getElementById('mapa-body').innerHTML=rows.map(r=>`
-    <tr class="${r.past?'past':r.cur?'cur':''}">
+    <tr class="${r.n===estado.pagos.length+1?'cur':''}">
       <td>${r.n}</td><td>${r.label}</td>
       <td>€${fmt(r.prest)}</td>
       <td style="color:var(--green)">€${fmt(r.cap)}</td>
       <td style="color:var(--red)">€${fmt(r.juros)}</td>
+      <td style="color:var(--red)">€${fmt(r.selo||0)}</td>
       <td>€${fmt(r.saldo)}</td>
     </tr>`).join('');
 }
@@ -1738,11 +1898,72 @@ function delCusto(aId,cId){
   ativos=ativos.map(a=>a.id===aId?{...a,custos:(a.custos||[]).filter(c=>c.id!==cId)}:a);
   sv('fp_ativos',ativos);renderAtivos();
 }
+function dadosAtualizacao(tipo,id){
+  const config={ativo:{lista:ativos,chave:'mkt',storage:'fp_ativos',render:renderAtivos},investimento:{lista:investimentos,chave:'atual',storage:'fp_inv',render:renderInv},ppr:{lista:pprs,chave:'atual',storage:'fp_pprs',render:renderPPR}}[tipo];
+  return config?{...config,item:config.lista.find(x=>x.id===id)}:null;
+}
+function resumoAtualizacoes(atualizacoes,tipo,id){
+  const ultimas=(atualizacoes||[]).slice().sort((a,b)=>b.data.localeCompare(a.data)).slice(0,3);
+  if(!ultimas.length)return '<div class="sub" style="margin-top:5px">Ainda sem histórico de avaliações</div>';
+  return `<div class="sub" style="margin-top:5px">Última atualização: ${new Date(ultimas[0].data+'T00:00:00').toLocaleDateString('pt-PT')} · €${fmt(ultimas[0].valor)}${ultimas.length>1?` · <button class="btn-del" onclick="alternarHistorico('${tipo}',${id})" style="font-size:11px">${ultimas.length} registos</button>`:''}</div><div id="historico-${tipo}-${id}"></div>`;
+}
+function alternarHistorico(tipo,id){
+  const d=dadosAtualizacao(tipo,id);
+  const el=document.getElementById(`historico-${tipo}-${id}`);
+  if(!d?.item||!el)return;
+  if(el.innerHTML){el.innerHTML='';return;}
+  const rows=(d.item.atualizacoes||[]).slice().sort((a,b)=>b.data.localeCompare(a.data));
+  el.innerHTML=`<div style="margin-top:6px;padding-top:6px;border-top:.5px solid var(--border);font-size:11px">${rows.map(a=>`<div style="display:flex;justify-content:space-between;padding:2px 0"><span>${new Date(a.data+'T00:00:00').toLocaleDateString('pt-PT')}</span><span style="font-family:var(--mono)">€${fmt(a.valor)}</span></div>`).join('')}</div>`;
+}
+function abrirAtualizacao(tipo,id){
+  const d=dadosAtualizacao(tipo,id);
+  const alvo=document.getElementById(`atualizacao-${tipo}-${id}`);
+  if(!d?.item||!alvo)return;
+  const hojeISO=hoje.toISOString().slice(0,10);
+  alvo.innerHTML=`<div class="form-inline" style="margin:10px 0"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Atualizar avaliação</div><div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap"><div class="form-group" style="min-width:160px;flex:1"><label>Novo valor (€)</label><input type="number" id="av-valor-${tipo}-${id}" value="${d.item[d.chave]}" min="0" step="0.01"></div><div class="form-group"><label>Data</label><input type="date" id="av-data-${tipo}-${id}" value="${hojeISO}"></div><button class="btn-primary" onclick="guardarAtualizacao('${tipo}',${id})" style="font-size:12px;padding:7px 12px">Guardar</button><button class="btn-ghost" onclick="document.getElementById('atualizacao-${tipo}-${id}').innerHTML=''" style="font-size:12px;padding:7px 10px">Cancelar</button></div></div>`;
+}
+function guardarAtualizacao(tipo,id){
+  const d=dadosAtualizacao(tipo,id);
+  const valor=parseFloat(document.getElementById(`av-valor-${tipo}-${id}`).value);
+  const data=document.getElementById(`av-data-${tipo}-${id}`).value;
+  if(!d?.item||!Number.isFinite(valor)||valor<0||!data)return;
+  const registo={id:Date.now(),data,valor};
+  const lista=d.lista.map(x=>x.id===id?{...x,[d.chave]:valor,atualizacoes:[...(x.atualizacoes||[]),registo]}:x);
+  if(tipo==='ativo')ativos=lista;
+  if(tipo==='investimento')investimentos=lista;
+  if(tipo==='ppr')pprs=lista;
+  sv(d.storage,lista);
+  d.render();
+}
+function abrirReforco(tipo,id){
+  const item=(tipo==='investimento'?investimentos:pprs).find(x=>x.id===id);
+  const alvo=document.getElementById(`reforco-${tipo}-${id}`);
+  if(!item||!alvo)return;
+  const data=hoje.toISOString().slice(0,10);
+  const eAcao=tipo==='investimento'&&item.tipo==='Ações';
+  alvo.innerHTML=`<div class="form-inline" style="margin:10px 0"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Registar reforço</div><div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">${eAcao?`<div class="form-group"><label>Quantidade</label><input type="number" id="rf-qtd-${tipo}-${id}" min="0.0001" step="any" placeholder="0"></div><div class="form-group"><label>Preço por ação (€)</label><input type="number" id="rf-preco-${tipo}-${id}" min="0.01" step="0.01" placeholder="0.00"></div>`:`<div class="form-group"><label>Valor (€)</label><input type="number" id="rf-valor-${tipo}-${id}" min="0.01" step="0.01" placeholder="0.00"></div>`}<div class="form-group"><label>Data</label><input type="date" id="rf-data-${tipo}-${id}" value="${data}"></div><button class="btn-primary" onclick="guardarReforco('${tipo}',${id})" style="font-size:12px;padding:7px 12px">Guardar reforço</button><button class="btn-ghost" onclick="document.getElementById('reforco-${tipo}-${id}').innerHTML=''" style="font-size:12px;padding:7px 10px">Cancelar</button></div></div>`;
+}
+function guardarReforco(tipo,id){
+  const lista=tipo==='investimento'?investimentos:pprs;
+  const item=lista.find(x=>x.id===id);
+  const data=document.getElementById(`rf-data-${tipo}-${id}`).value;
+  if(!item||!data)return;
+  const eAcao=tipo==='investimento'&&item.tipo==='Ações';
+  const quantidade=eAcao?(parseFloat(document.getElementById(`rf-qtd-${tipo}-${id}`).value)||0):null;
+  const preco=eAcao?(parseFloat(document.getElementById(`rf-preco-${tipo}-${id}`).value)||0):null;
+  const valor=eAcao?quantidade*preco:(parseFloat(document.getElementById(`rf-valor-${tipo}-${id}`).value)||0);
+  if(!valor||valor<=0)return;
+  const reforco={id:Date.now(),data,valor,...(eAcao?{quantidade,preco}:{})};
+  const atualizada=lista.map(x=>x.id===id?{...x,inv:tipo==='investimento'?(+x.inv||0)+valor:x.inv,contrib:tipo==='ppr'?(+x.contrib||0)+valor:x.contrib,atual:(+x.atual||0)+valor,reforcos:[...(x.reforcos||[]),reforco]}:x);
+  if(tipo==='investimento'){investimentos=atualizada;sv('fp_inv',investimentos);renderInv();}
+  else{pprs=atualizada;sv('fp_pprs',pprs);renderPPR();}
+}
 function renderAtivos(){
   const el=document.getElementById('lista-ativos');
   if(!ativos.length){el.innerHTML='<div class="card"><div style="color:var(--text3);font-size:13px">Nenhum ativo</div></div>';return;}
   el.innerHTML=ativos.map(a=>{
     const custos=a.custos||[];
+    const historico=resumoAtualizacoes(a.atualizacoes,'ativo',a.id);
     const totalC=custos.reduce((s,c)=>s+c.valor,0);
     const delta=a.mkt-a.aq;
     const pct=a.aq>0?((delta/a.aq)*100).toFixed(1):0;
@@ -1762,11 +1983,14 @@ function renderAtivos(){
         <div style="display:flex;align-items:center;gap:10px">
           <div style="text-align:right"><div style="font-family:var(--mono)">€${fmt(a.mkt)}</div>
             <div style="font-size:11px;color:${delta>=0?'var(--green)':'var(--red)'}">${delta>=0?'+':''}${pct}%</div></div>
+          <button class="btn-ghost" onclick="abrirAtualizacao('ativo',${a.id})" style="font-size:12px;padding:5px 8px">Atualizar valor</button>
           <button class="btn-del" onclick="editAtivo(${a.id})" aria-label="Editar ativo"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3l8.385-8.415z"/></svg></button>
           <button class="btn-del" onclick="delAtivo(${a.id})" aria-label="Remover ativo"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
         </div>
       </div>
+      <div id="atualizacao-ativo-${a.id}"></div>
       <div class="ativo-body">
+        ${historico}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <span style="font-size:12px;color:var(--text3)">Custos anuais <span style="color:var(--red);font-family:var(--mono)">€${fmt(totalC)}</span></span>
           <button class="btn-ghost" style="font-size:12px;padding:4px 10px" onclick="toggleFormCusto(${a.id})"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Custo</button>
@@ -1774,12 +1998,12 @@ function renderAtivos(){
         <div id="fc-${a.id}" style="display:none;margin-bottom:10px">
           <div class="form-inline" style="background:var(--bg3);border-radius:var(--radius-sm);padding:.75rem">
             <div class="form-grid3">
-              <div class="form-group"><label>Descrição</label><input type="text" id="cd-d-${a.id}" placeholder="ex: IUC"></div>
+              <div class="form-group"><label>Descrição</label><input type="text" id="cd-d-${a.id}"></div>
               <div class="form-group"><label>Valor (€)</label><input type="number" id="cd-v-${a.id}" placeholder="0.00" min="0" step="0.01"></div>
-              <div class="form-group"><label>Mês (1-12)</label><input type="number" id="cd-m-${a.id}" placeholder="ex: 2" min="1" max="12"></div>
+              <div class="form-group"><label>Mês (1-12)</label><input type="number" id="cd-m-${a.id}" min="1" max="12"></div>
             </div>
             <div class="form-grid">
-              <div class="form-group"><label>Dia limite</label><input type="number" id="cd-dia-${a.id}" placeholder="ex: 27" min="1" max="31"></div>
+              <div class="form-group"><label>Dia limite</label><input type="number" id="cd-dia-${a.id}" min="1" max="31"></div>
               <div class="form-group"><label>Categoria</label><select id="cd-c-${a.id}"><option>Seguro</option><option>Imposto</option><option>Manutenção</option><option>Condomínio</option><option>Inspeção</option><option>Outro</option></select></div>
             </div>
             <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="addCusto(${a.id})">Guardar</button>
@@ -1865,28 +2089,14 @@ function showMesCal(m){
 function renderCalDetail(custos){
   const el=document.getElementById('cal-detail');
   if(!custos.length){el.innerHTML='<div style="color:var(--text3);font-size:13px;padding:8px 0">Sem custos</div>';return;}
-  el.innerHTML=custos.map(c=>{
-    const isCred=c.isCredito;
-    const isSub=c.isSub;
-    const isConta=c.isConta;
-    let accentColor=isCred?'var(--amber)':isSub?'var(--pink)':isConta?'var(--blue)':'';
-    let badge=isCred
-      ?`<span class="pill pill-amber" style="font-size:10px">prestação · ${c.prazoRestante}m restantes</span>`
-      :isSub?'<span class="pill" style="background:var(--pink-bg);color:var(--pink-text);font-size:10px">sub</span>'
-      :isConta?'<span class="pill pill-blue" style="font-size:10px">conta</span>':'';
-    return`<div class="custo-row ${urgCls(c.dias)}" style="${accentColor?'border-left-color:'+accentColor:''}">
-      <div class="row-left">
-        <span class="dot" style="background:${accentColor||c.atDot}"></span>
-        <div>
-          <div style="font-weight:500">${c.desc} ${badge}</div>
-          <div class="sub">${c.ativoNome} · dia ${c.dia}/${String(c.mes).padStart(2,'0')}</div>
-        </div>
-      </div>
+  el.innerHTML=custos.map(c=>`
+    <div class="custo-row ${urgCls(c.dias)}">
+      <div class="row-left"><span class="dot" style="background:${c.atDot}"></span>
+        <div><div style="font-weight:500">${c.desc}</div><div class="sub">${c.ativoNome} · até ${c.dia}/${String(c.mes).padStart(2,'0')}</div></div></div>
       <div style="display:flex;align-items:center;gap:8px">
         <span style="font-family:var(--mono)">€${fmt(c.valor)}</span>
         <span class="${pillUrgCls(c.dias)}">${pillUrgLabel(c.dias)}</span>
-      </div></div>`;
-  }).join('');
+      </div></div>`).join('');
 }
 
 function addInv(){
@@ -1894,10 +2104,12 @@ function addInv(){
   const tipo=document.getElementById('i-tipo').value;
   const inv=parseFloat(document.getElementById('i-inv').value)||0;
   const atual=parseFloat(document.getElementById('i-atual').value)||0;
+  const mensal=parseFloat(document.getElementById('i-mensal').value)||0;
+  const dia=parseInt(document.getElementById('i-dia').value)||1;
   if(!nome||!inv||!atual)return;
-  investimentos.push({id:Date.now(),nome,tipo,inv,atual});
+  investimentos.push({id:Date.now(),nome,tipo,inv,atual,mensal,dia,reforcos:[]});
   sv('fp_inv',investimentos);
-  ['i-nome','i-inv','i-atual'].forEach(id=>document.getElementById(id).value='');
+  ['i-nome','i-inv','i-atual','i-mensal','i-dia'].forEach(id=>document.getElementById(id).value='');
   renderInv();
 }
 function delInv(id){investimentos=investimentos.filter(i=>i.id!==id);sv('fp_inv',investimentos);renderInv();}
@@ -1916,15 +2128,17 @@ function renderInv(){
     const delta=i.atual-i.inv;
     const pct=i.inv>0?((delta/i.inv)*100).toFixed(1):0;
     return`<div class="row" id="inv-row-${i.id}">
-      <div><div style="font-weight:500">${i.nome}</div><div class="sub">${i.tipo}</div></div>
+      <div><div style="font-weight:500">${i.nome}</div><div class="sub">${i.tipo}${i.mensal>0?' · reforço €'+fmt(i.mensal)+'/mês (dia '+(i.dia||1)+')':''}</div>${resumoAtualizacoes(i.atualizacoes,'investimento',i.id)}</div>
       <div style="display:flex;align-items:center;gap:8px">
         <div style="text-align:right">
           <div style="font-family:var(--mono)">€${fmt(i.atual)}</div>
           <div style="font-size:11px;color:${delta>=0?'var(--green)':'var(--red)'}">${delta>=0?'+':''}${pct}%</div>
         </div>
+        <button class="btn-ghost" onclick="abrirReforco('investimento',${i.id})" style="font-size:12px;padding:5px 8px">Reforçar</button>
+        <button class="btn-ghost" onclick="abrirAtualizacao('investimento',${i.id})" style="font-size:12px;padding:5px 8px">Atualizar</button>
         <button class="btn-del" onclick="editInv(${i.id})" aria-label="Editar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3l8.385-8.415z"/></svg></button>
         <button class="btn-del" onclick="delInv(${i.id})" aria-label="Remover"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
-      </div></div>`;
+      </div></div><div id="reforco-investimento-${i.id}"></div><div id="atualizacao-investimento-${i.id}"></div>`;
   }).join('')}</div>`;
 }
 function editInv(id){
@@ -1941,6 +2155,8 @@ function editInv(id){
       </div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">INVESTIDO (€)</div><input type="number" id="ei-inv-${id}" value="${i.inv}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">VALOR ATUAL (€)</div><input type="number" id="ei-atual-${id}" value="${i.atual}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">REFORÇO MENSAL (€)</div><input type="number" id="ei-mensal-${id}" value="${i.mensal||0}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">DIA DO REFORÇO</div><input type="number" id="ei-dia-${id}" value="${i.dia||1}" min="1" max="31" style="${S}"></div>
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn-primary" onclick="saveInv(${id})" style="font-size:12px;padding:6px 14px"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg> Guardar</button>
@@ -1953,8 +2169,10 @@ function saveInv(id){
   const tipo=document.getElementById('ei-tipo-'+id).value;
   const inv=parseFloat(document.getElementById('ei-inv-'+id).value)||0;
   const atual=parseFloat(document.getElementById('ei-atual-'+id).value)||0;
+  const mensal=parseFloat(document.getElementById('ei-mensal-'+id).value)||0;
+  const dia=parseInt(document.getElementById('ei-dia-'+id).value)||1;
   if(!nome)return;
-  investimentos=investimentos.map(i=>i.id===id?{...i,nome,tipo,inv,atual}:i);
+  investimentos=investimentos.map(i=>i.id===id?{...i,nome,tipo,inv,atual,mensal,dia}:i);
   sv('fp_inv',investimentos);renderInv();
 }
 
@@ -1965,11 +2183,12 @@ function addPPR(){
   const contrib=parseFloat(document.getElementById('ppr-contrib').value)||0;
   const atual=parseFloat(document.getElementById('ppr-atual').value)||0;
   const mensal=parseFloat(document.getElementById('ppr-mensal').value)||0;
+  const dia=parseInt(document.getElementById('ppr-dia').value)||1;
   const ano=parseInt(document.getElementById('ppr-ano').value)||2050;
   if(!nome||!atual)return;
-  pprs.push({id:Date.now(),nome,tipo,contrib,atual,mensal,ano});
+  pprs.push({id:Date.now(),nome,tipo,contrib,atual,mensal,dia,ano,reforcos:[]});
   sv('fp_pprs',pprs);
-  ['ppr-nome','ppr-contrib','ppr-atual','ppr-mensal'].forEach(id=>document.getElementById(id).value='');
+  ['ppr-nome','ppr-contrib','ppr-atual','ppr-mensal','ppr-dia'].forEach(id=>document.getElementById(id).value='');
   renderPPR();
 }
 function delPPR(id){pprs=pprs.filter(p=>p.id!==id);sv('fp_pprs',pprs);renderPPR();}
@@ -1983,16 +2202,19 @@ function renderPPR(){
     const anosResto=p.ano-hoje.getFullYear();
     return`<div class="row" id="ppr-row-${p.id}">
       <div><div style="font-weight:500">${p.nome}</div>
-        <div class="sub">${p.tipo} · resgate ${p.ano} (${anosResto} anos)${p.mensal>0?' · +€'+fmt(p.mensal)+'/mês':''}</div>
+        <div class="sub">${p.tipo} · resgate ${p.ano} (${anosResto} anos)${p.mensal>0?' · +€'+fmt(p.mensal)+'/mês (dia '+(p.dia||1)+')':''}</div>
+        ${resumoAtualizacoes(p.atualizacoes,'ppr',p.id)}
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <div style="text-align:right">
           <div style="font-family:var(--mono)">€${fmt(p.atual)}</div>
           <div style="font-size:11px;color:${delta>=0?'var(--green)':'var(--red)'}">${delta>=0?'+':''}${pct}% vs contribuído</div>
         </div>
+        <button class="btn-ghost" onclick="abrirReforco('ppr',${p.id})" style="font-size:12px;padding:5px 8px">Reforçar</button>
+        <button class="btn-ghost" onclick="abrirAtualizacao('ppr',${p.id})" style="font-size:12px;padding:5px 8px">Atualizar</button>
         <button class="btn-del" onclick="editPPR(${p.id})" aria-label="Editar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3l8.385-8.415z"/></svg></button>
         <button class="btn-del" onclick="delPPR(${p.id})" aria-label="Remover"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
-      </div></div>`;
+      </div></div><div id="reforco-ppr-${p.id}"></div><div id="atualizacao-ppr-${p.id}"></div>`;
   }).join('')}
     <div class="row" style="font-weight:500"><div>Total acumulado</div><span style="color:var(--purple);font-family:var(--mono)">€${fmt(total)}</span></div>
   </div>`;
@@ -2012,6 +2234,7 @@ function editPPR(id){
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">TOTAL CONTRIBUÍDO (€)</div><input type="number" id="ep-contrib-${id}" value="${p.contrib}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">VALOR ATUAL (€)</div><input type="number" id="ep-atual-${id}" value="${p.atual}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">CONTRIBUIÇÃO MENSAL (€)</div><input type="number" id="ep-mensal-${id}" value="${p.mensal||0}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">DIA DO REFORÇO</div><input type="number" id="ep-dia-${id}" value="${p.dia||1}" min="1" max="31" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">ANO DE RESGATE</div><input type="number" id="ep-ano-${id}" value="${p.ano}" style="${S}"></div>
     </div>
     <div style="display:flex;gap:8px">
@@ -2026,9 +2249,10 @@ function savePPR(id){
   const contrib=parseFloat(document.getElementById('ep-contrib-'+id).value)||0;
   const atual=parseFloat(document.getElementById('ep-atual-'+id).value)||0;
   const mensal=parseFloat(document.getElementById('ep-mensal-'+id).value)||0;
+  const dia=parseInt(document.getElementById('ep-dia-'+id).value)||1;
   const ano=parseInt(document.getElementById('ep-ano-'+id).value)||2050;
   if(!nome)return;
-  pprs=pprs.map(p=>p.id===id?{...p,nome,tipo,contrib,atual,mensal,ano}:p);
+  pprs=pprs.map(p=>p.id===id?{...p,nome,tipo,contrib,atual,mensal,dia,ano}:p);
   sv('fp_pprs',pprs);renderPPR();
 }
 
@@ -2096,8 +2320,10 @@ function addCredito(){
   const prazo=parseInt(document.getElementById('c-prazo').value)||0;
   const dia=parseInt(document.getElementById('c-dia').value)||1;
   const inicio=document.getElementById('c-inicio').value;
+  const jurosInicial=parseFloat(document.getElementById('c-juros-inic').value)||0;
+  const isJuros=parseFloat(document.getElementById('c-is-juros').value)||0;
   if(!nome||!divida||!prest||!prazo) return;
-  creditos.push({id:Date.now(),nome,tipo,divida,taxa,prest,prazo,dia,inicio,encargos:[...encargosTemp]});
+  creditos.push({id:Date.now(),nome,tipo,divida,taxa,prest,prazo,dia,inicio,jurosInicial,isJuros,encargos:[...encargosTemp]});
   sv('fp_cred',creditos);
   ['c-nome','c-divida','c-taxa','c-prest','c-prazo','c-dia'].forEach(id=>document.getElementById(id).value='');
   encargosTemp=[];
@@ -2110,12 +2336,16 @@ function renderCreditos(){
   const el=document.getElementById('lista-creditos');
   if(!creditos.length){el.innerHTML='<div class="card"><div style="color:var(--text3);font-size:13px">Nenhum crédito</div></div>';return;}
   el.innerHTML=creditos.map(c=>{
+    const estado=estadoCreditoHoje(c);
     const encargos=c.encargos||[];
-    const totalJ=Math.max(c.prest*c.prazo-c.divida,0);
-    const encArg=encargos.filter(e=>e.tipo==='anual').reduce((s,e)=>s+e.valor,0)*( c.prazo/12);
+    const totalJ=estado.futuros.reduce((s,r)=>s+r.juros,0);
+    const totalIS=estado.futuros.reduce((s,r)=>s+(r.selo||0),0);
+    const encArg=encargos.filter(e=>e.tipo==='anual').reduce((s,e)=>s+e.valor,0)*( estado.futuros.length/12);
     const encPont=encargos.filter(e=>e.tipo==='pontual').reduce((s,e)=>s+e.valor,0);
     const encDil=encargos.filter(e=>e.tipo==='diluido').reduce((s,e)=>s+e.valor,0);
-    const custoTotal=totalJ+encArg+encPont;
+    const custoTotal=totalJ+totalIS+encArg+encPont;
+    const amortizacoes=c.amortizacoes||[];
+    const amortHtml=amortizacoes.length?`<div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Amortizações registadas</div>${amortizacoes.slice().sort((a,b)=>b.data.localeCompare(a.data)).map(a=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0"><span>${new Date(a.data+'T00:00:00').toLocaleDateString('pt-PT')} · ${a.modo==='prestacao'?'reduzir prestação':'reduzir prazo'}${a.comissao?` · comissão €${fmt(a.comissao)}`:''}</span><span style="display:flex;align-items:center;gap:6px"><span style="font-family:var(--mono);color:var(--green)">−€${fmt(a.valor)}</span><button class="btn-del" onclick="apagarAmortizacao(${c.id},${a.id})" aria-label="Remover amortização">×</button></span></div>`).join('')}</div>`:'';
     const encHtml=encargos.length?`<div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)">
       <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Comissões e encargos</div>
       ${encargos.map(e=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0">
@@ -2129,7 +2359,7 @@ function renderCreditos(){
         <div class="row-left"><span class="dot" style="background:${CR_DOT[c.tipo]||'#888'}"></span>
           <div><div style="font-weight:500">${c.nome}</div><div class="sub">${c.tipo} · vence dia ${c.dia}</div></div></div>
         <div style="display:flex;align-items:center;gap:10px">
-          <span class="pill pill-red">€ ${fmt(c.divida)}</span>
+          <span class="pill pill-red">€ ${fmt(estado.saldo)}</span>
           <button class="btn-del" onclick="editCred(${c.id})" aria-label="Editar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3l8.385-8.415z"/></svg></button>
           <button class="btn-del" onclick="delCred(${c.id})" aria-label="Remover"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
         </div>
@@ -2137,9 +2367,12 @@ function renderCreditos(){
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:12px">
         <div><div style="color:var(--text3);margin-bottom:2px">Prestação</div><div style="font-family:var(--mono)">€${fmt(c.prest)}/mês</div></div>
         <div><div style="color:var(--text3);margin-bottom:2px">Taxa</div><div style="font-family:var(--mono)">${c.taxa}% a.a.</div></div>
-        <div><div style="color:var(--text3);margin-bottom:2px">Prazo restante</div><div style="font-family:var(--mono)">${c.prazo} meses</div></div>
+        <div><div style="color:var(--text3);margin-bottom:2px">Prazo restante</div><div style="font-family:var(--mono)">${estado.futuros.length} meses</div></div>
         <div><div style="color:var(--text3);margin-bottom:2px">Custo total (juros+enc.)</div><div style="font-family:var(--mono);color:var(--red)">€${fmt(custoTotal)}</div></div>
       </div>
+      <button class="btn-primary" onclick="abrirAmortizacao(${c.id})" style="margin-top:14px;font-size:12px;padding:7px 12px">Amortizar crédito</button>
+      <div id="amort-form-${c.id}"></div>
+      ${amortHtml}
       ${encHtml}
     </div>`;
   }).join('');
@@ -2157,11 +2390,14 @@ function editCred(id){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">NOME</div><input id="ecr-nome-${id}" value="${c.nome}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">TIPO</div><select id="ecr-tipo-${id}" style="${S}">${tipoOpts}</select></div>
-      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">CAPITAL EM DÍVIDA (€)</div><input type="number" id="ecr-divida-${id}" value="${c.divida}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">CAPITAL INICIAL (€)</div><input type="number" id="ecr-divida-${id}" value="${c.divida}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">TAXA ANUAL (%)</div><input type="number" id="ecr-taxa-${id}" value="${c.taxa}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">PRESTAÇÃO MENSAL (€)</div><input type="number" id="ecr-prest-${id}" value="${c.prest}" style="${S}"></div>
-      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">PRAZO RESTANTE (meses)</div><input type="number" id="ecr-prazo-${id}" value="${c.prazo}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">PRAZO TOTAL (meses)</div><input type="number" id="ecr-prazo-${id}" value="${c.prazo}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">DIA DE VENCIMENTO</div><input type="number" id="ecr-dia-${id}" value="${c.dia}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">MÊS DE INÍCIO</div><input type="month" id="ecr-inicio-${id}" value="${c.inicio||''}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">JUROS NO MÊS INICIAL (€)</div><input type="number" step="0.01" id="ecr-juros-inic-${id}" value="${c.jurosInicial||0}" style="${S}"></div>
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">IS SOBRE JUROS (%)</div><input type="number" step="0.01" id="ecr-is-juros-${id}" value="${c.isJuros===undefined?4:c.isJuros}" style="${S}"></div>
       <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">CONTA A DEBITAR</div><select id="ecr-conta-${id}" style="${S}">${contaOpts}</select></div>
     </div>
     <div style="display:flex;gap:8px">
@@ -2178,9 +2414,12 @@ function saveCred(id){
   const prest=parseFloat(document.getElementById('ecr-prest-'+id).value)||0;
   const prazo=parseInt(document.getElementById('ecr-prazo-'+id).value)||0;
   const dia=parseInt(document.getElementById('ecr-dia-'+id).value)||1;
+  const inicio=document.getElementById('ecr-inicio-'+id).value;
+  const jurosInicial=parseFloat(document.getElementById('ecr-juros-inic-'+id).value)||0;
+  const isJuros=parseFloat(document.getElementById('ecr-is-juros-'+id).value)||0;
   const contaId=parseInt(document.getElementById('ecr-conta-'+id).value)||null;
   if(!nome)return;
-  creditos=creditos.map(c=>c.id===id?{...c,nome,tipo,divida,taxa,prest,prazo,dia,contaId}:c);
+  creditos=creditos.map(c=>c.id===id?{...c,nome,tipo,divida,taxa,prest,prazo,dia,inicio,jurosInicial,isJuros,contaId}:c);
   sv('fp_cred',creditos);renderCreditos();
 }
 
@@ -2298,32 +2537,22 @@ function saveSub(id){
 // Patch renderCal to include subscricoes in pink
 const _origRenderCal = renderCal;
 function creditosCal(){
-  // Returns one entry per credit per month it's still active, starting from its start month
   const arr=[];
   const ano=hoje.getFullYear();
   creditos.forEach(c=>{
     if(!c.prazo||!c.prest)return;
-    // Determine start month from c.inicio or default to current month
-    let startAno=ano, startMes=hoje.getMonth(); // 0-indexed
-    if(c.inicio){
-      const parts=c.inicio.split('-');
-      startAno=parseInt(parts[0]);
-      startMes=parseInt(parts[1])-1;
-    }
-    // For each month of current year, check if credit is active
-    for(let m=0;m<12;m++){
-      // How many months from start to this month?
-      const mesesDecorridos=(ano-startAno)*12+(m-startMes);
-      if(mesesDecorridos<0) continue; // not started yet
-      if(mesesDecorridos>=c.prazo) continue; // already ended
-      const d=new Date(ano,m,c.dia||1);
+    const planoCompleto=planoCredito(c).filter(r=>r.cap>0);
+    const plano=planoCompleto.filter(r=>r.data.getFullYear()===ano);
+    plano.forEach(r=>{
+      const d=r.data;
       const dias=Math.ceil((d-hoje)/(1000*60*60*24));
-      const prazoRestante=c.prazo-mesesDecorridos;
+      const posicao=planoCompleto.findIndex(p=>p.n===r.n);
+      const prazoRestante=posicao<0?0:planoCompleto.length-posicao;
       arr.push({
         desc:c.nome,
-        valor:c.prest,
-        mes:m+1,
-        dia:c.dia||1,
+        valor:r.prest,
+        mes:d.getMonth()+1,
+        dia:d.getDate(),
         dias,
         ativoNome:c.tipo,
         atDot:CR_DOT[c.tipo]||'#f06060',
@@ -2331,7 +2560,7 @@ function creditosCal(){
         prazoRestante,
         creditoId:c.id
       });
-    }
+    });
   });
   return arr;
 }
@@ -2340,21 +2569,25 @@ function renderCal(){
   const todos=todosOsCustos();
   const subCustos=subscricoesCal();
   const credCustos=creditosCal();
+  const invReforcos=reforcosInvestimentosCal();
+  const pprReforcos=reforcosPprCal();
   const totalComissoesContas=contas.reduce((s,c)=>s+(c.comissao||0)*12,0);
-  const totalCredAnual=creditos.reduce((s,c)=>s+c.prest*Math.min(c.prazo,12),0);
+  const totalCredAnual=credCustos.reduce((s,c)=>s+c.valor,0);
   const totalAnual=ativos.reduce((s,a)=>(a.custos||[]).reduce((s2,c)=>s2+c.valor,s),0)
     +subscricoes.filter(s=>s.ativa).reduce((s,sub)=>s+valorMensal(sub)*12,0)
-    +totalComissoesContas+totalCredAnual;
-  const prox60=[...todos,...subCustos,...credCustos].filter(c=>c.dias>=0&&c.dias<=60);
-  const urg=[...todos,...subCustos,...credCustos].filter(c=>c.dias>=0&&c.dias<=7);
-  const totalPrestMes=creditos.reduce((s,c)=>s+c.prest,0);
+    +totalComissoesContas+totalCredAnual+invReforcos.reduce((s,c)=>s+c.valor,0)+pprReforcos.reduce((s,c)=>s+c.valor,0);
+  const prox60=[...todos,...subCustos,...credCustos,...invReforcos,...pprReforcos].filter(c=>c.dias>=0&&c.dias<=60);
+  const urg=[...todos,...subCustos,...credCustos,...invReforcos,...pprReforcos].filter(c=>c.dias>=0&&c.dias<=7);
+  const totalPrestMes=creditos.reduce((s,c)=>s+(estadoCreditoHoje(c).futuros[0]?.prest||0),0);
+  const totalReforcosMes=investimentos.reduce((s,i)=>s+(+i.mensal||0),0)+pprs.reduce((s,p)=>s+(+p.mensal||0),0);
   document.getElementById('cal-metrics').innerHTML=`
     <div class="metric"><div class="metric-label">Prestações/mês (ativas)</div><div class="metric-value red">€${fmtK(totalPrestMes)}</div></div>
     <div class="metric"><div class="metric-label">Subscrições/mês</div><div class="metric-value" style="color:var(--pink)">€${fmtK(subscricoes.filter(s=>s.ativa).reduce((s,sub)=>s+valorMensal(sub),0))}</div></div>
+    <div class="metric"><div class="metric-label">Reforços/mês</div><div class="metric-value blue">€${fmtK(totalReforcosMes)}</div></div>
     <div class="metric"><div class="metric-label">Próximos 60 dias</div><div class="metric-value ${prox60.length?'amber':'green'}">€${fmtK(prox60.reduce((s,c)=>s+c.valor,0))}</div></div>
     <div class="metric"><div class="metric-label">Urgentes (7d)</div><div class="metric-value ${urg.length?'red':'green'}">${urg.length}</div></div>
   `;
-  const porMes=Array(12).fill(0).map(()=>({ativos:0,subs:0,contas:0,creds:0,urg:false,temSub:false,temConta:false,temCred:false}));
+  const porMes=Array(12).fill(0).map(()=>({ativos:0,subs:0,contas:0,creds:0,reforcos:0,urg:false,temSub:false,temConta:false,temCred:false,temReforco:false}));
   todos.forEach(c=>{
     const m=c.mes-1;
     if(c.isConta){porMes[m].contas+=c.valor;porMes[m].temConta=true;}
@@ -2363,23 +2596,25 @@ function renderCal(){
   });
   subCustos.forEach(c=>{const m=c.mes-1;porMes[m].subs+=c.valor;porMes[m].temSub=true;});
   credCustos.forEach(c=>{const m=c.mes-1;porMes[m].creds+=c.valor;porMes[m].temCred=true;});
+  [...invReforcos,...pprReforcos].forEach(c=>{const m=c.mes-1;porMes[m].reforcos+=c.valor;porMes[m].temReforco=true;});
 
   document.getElementById('cal-grid').innerHTML=MESES_SHORT.map((nm,i)=>{
     const pm=porMes[i];
-    const total=pm.ativos+pm.subs+pm.contas+pm.creds;
+    const total=pm.ativos+pm.subs+pm.contas+pm.creds+pm.reforcos;
     let cls='cal-cell';
     if(pm.urg) cls+=' urgent';
-    else if(pm.ativos>0||pm.temConta) cls+=' has-cost';
+    else if(pm.ativos>0||pm.temConta||pm.temReforco) cls+=' has-cost';
     if(pm.temSub) cls+=' has-sub';
     if(pm.temCred) cls+=' has-cred';
     if(i===hoje.getMonth()) cls+=' current';
-    return`<div class="${cls}" onclick="showMesCal(${i})">
+    return`<div class="${cls}" onclick="showMesCal(${i})" ondblclick="openMesCal(${i})" ontouchstart="openMesCalTouch(event,${i})" title="Duplo clique para abrir ${MESES_FULL[i]}">
       <div class="cal-cell-name">${nm}</div>
       <div class="cal-cell-val">${total>0?'€'+Math.round(total):'-'}</div>
-      ${pm.temCred?`<div style="font-size:9px;color:#f0a060;margin-top:2px">€${Math.round(pm.creds)} prest.</div>`:''}
+      <div style="font-size:9px;margin-top:2px;color:#f0a060;min-height:13px">${pm.temCred?'€'+Math.round(pm.creds)+' prest.':''}</div>
     </div>`;
   }).join('');
-  showMesCal(null);
+  if(calMesAberto!==null) renderMesCal();
+  else showMesCal(null);
 }
 
 function subscricoesCal(){
@@ -2404,22 +2639,130 @@ function subscricoesCal(){
   });
   return arr.sort((a,b)=>a.dias-b.dias);
 }
+function reforcosInvestimentosCal(){
+  const arr=[],ano=hoje.getFullYear();
+  investimentos.filter(i=>(+i.mensal||0)>0).forEach(i=>{
+    for(let m=0;m<12;m++){
+      const d=new Date(ano,m,i.dia||1);
+      arr.push({desc:`Reforço ${i.nome}`,valor:+i.mensal,mes:m+1,dia:i.dia||1,dias:Math.ceil((d-hoje)/(1000*60*60*24)),ativoNome:i.tipo,atDot:'var(--blue)',isInvestRef:true});
+    }
+  });
+  return arr;
+}
+function reforcosPprCal(){
+  const arr=[],ano=hoje.getFullYear();
+  pprs.filter(p=>(+p.mensal||0)>0).forEach(p=>{
+    for(let m=0;m<12;m++){
+      const d=new Date(ano,m,p.dia||1);
+      arr.push({desc:`Reforço ${p.nome}`,valor:+p.mensal,mes:m+1,dia:p.dia||1,dias:Math.ceil((d-hoje)/(1000*60*60*24)),ativoNome:p.tipo,atDot:'var(--purple)',isPprRef:true});
+    }
+  });
+  return arr;
+}
 function showMesCal(m){
   const todos=todosOsCustos();
   const subCustos=subscricoesCal();
   const credCustos=creditosCal();
+  const invReforcos=reforcosInvestimentosCal();
+  const pprReforcos=reforcosPprCal();
   if(m===null){
     document.getElementById('cal-detail-title').textContent='Próximos pagamentos';
-    const prox=[...todos,...subCustos,...credCustos].filter(c=>c.dias>=0).sort((a,b)=>a.dias-b.dias).slice(0,12);
+    const prox=[...todos,...subCustos,...credCustos,...invReforcos,...pprReforcos].filter(c=>c.dias>=0).sort((a,b)=>a.dias-b.dias).slice(0,12);
     renderCalDetail(prox);return;
   }
   document.getElementById('cal-detail-title').textContent=MESES_FULL[m]+' — pagamentos';
   const combined=[
     ...todos.filter(c=>c.mes-1===m),
     ...subCustos.filter(c=>c.mes-1===m),
-    ...credCustos.filter(c=>c.mes-1===m)
+    ...credCustos.filter(c=>c.mes-1===m),
+    ...invReforcos.filter(c=>c.mes-1===m),
+    ...pprReforcos.filter(c=>c.mes-1===m)
   ].sort((a,b)=>a.dia-b.dia);
   renderCalDetail(combined);
+}
+
+function openMesCalTouch(event,m){
+  // A touch device has no useful double-click: one tap opens the detailed calendar.
+  if(window.matchMedia('(hover: none), (pointer: coarse)').matches){
+    event.preventDefault();
+    openMesCal(m);
+  }
+}
+
+function openMesCal(m){
+  calMesAberto=m;
+  document.getElementById('cal-annual-view').classList.add('hidden');
+  document.getElementById('cal-month-view').classList.add('active');
+  renderMesCal();
+}
+
+function closeMesCal(){
+  calMesAberto=null;
+  document.getElementById('cal-month-view').classList.remove('active');
+  document.getElementById('cal-annual-view').classList.remove('hidden');
+  showMesCal(null);
+}
+
+function moveMesCal(delta){
+  calMesAberto=(calMesAberto+delta+12)%12;
+  renderMesCal();
+}
+
+function custosDoMesCal(m){
+  return [
+    ...todosOsCustos().filter(c=>c.mes-1===m),
+    ...subscricoesCal().filter(c=>c.mes-1===m),
+    ...creditosCal().filter(c=>c.mes-1===m),
+    ...reforcosInvestimentosCal().filter(c=>c.mes-1===m),
+    ...reforcosPprCal().filter(c=>c.mes-1===m)
+  ].sort((a,b)=>a.dia-b.dia);
+}
+
+function escapeCal(value){
+  return String(value??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
+function calAccent(c){
+  if(c.isCredito) return 'var(--amber)';
+  if(c.isSub) return 'var(--pink)';
+  if(c.isInvestRef) return 'var(--blue)';
+  if(c.isPprRef) return 'var(--purple)';
+  if(c.isConta) return 'var(--blue)';
+  return c.atDot||'var(--green)';
+}
+
+function calEntityIcon(c){
+  const label=escapeCal(c.desc);
+  const logo=c.logo||c.logoUrl||c.iconUrl||'';
+  if(logo) return `<span class="month-payment-icon" style="background:${calAccent(c)}"><img src="${escapeCal(logo)}" alt="" onerror="this.remove()"></span>`;
+  const initial=escapeCal(String(c.desc||'?').trim().charAt(0)||'?');
+  return `<span class="month-payment-icon" style="background:${calAccent(c)}" title="${label}">${initial}</span>`;
+}
+
+function renderMesCal(){
+  if(calMesAberto===null) return;
+  const ano=hoje.getFullYear();
+  const m=calMesAberto;
+  const custos=custosDoMesCal(m);
+  const porDia={};
+  custos.forEach(c=>{(porDia[c.dia]??=[]).push(c);});
+  document.getElementById('cal-month-heading').textContent=`${MESES_FULL[m]} ${ano}`;
+  document.getElementById('cal-detail-title').textContent=`${MESES_FULL[m]} — pagamentos`;
+  const primeiro=new Date(ano,m,1);
+  const offset=(primeiro.getDay()+6)%7; // segunda-feira é a primeira coluna
+  const diasNoMes=new Date(ano,m+1,0).getDate();
+  const cells=[];
+  for(let i=0;i<offset;i++) cells.push('<div class="month-day empty" aria-hidden="true"></div>');
+  for(let dia=1;dia<=diasNoMes;dia++){
+    const items=porDia[dia]||[];
+    const isHoje=ano===hoje.getFullYear()&&m===hoje.getMonth()&&dia===hoje.getDate();
+    const visible=items.slice(0,3).map(c=>`<div class="month-payment" title="${escapeCal(c.desc)} — €${fmt(c.valor)}">${calEntityIcon(c)}<span class="month-payment-name">${escapeCal(c.desc)}</span><span class="month-payment-value">€${fmt(c.valor)}</span></div>`).join('');
+    const extra=items.length>3?`<div class="month-more">+${items.length-3} pagamento${items.length-3>1?'s':''}</div>`:'';
+    cells.push(`<div class="month-day${isHoje?' today':''}"><div class="month-day-number">${dia}</div>${visible}${extra}</div>`);
+  }
+  while(cells.length%7) cells.push('<div class="month-day empty" aria-hidden="true"></div>');
+  document.getElementById('month-days').innerHTML=cells.join('');
+  renderCalDetail(custos);
 }
 
 function renderCalDetail(custos){
@@ -2429,10 +2772,14 @@ function renderCalDetail(custos){
     const isSub=c.isSub;
     const isConta=c.isConta;
     const isCred=c.isCredito;
+    const isInvestRef=c.isInvestRef;
+    const isPprRef=c.isPprRef;
     let accentColor='';
     let badge='';
     if(isCred){accentColor='var(--amber)';badge=`<span class="pill pill-amber" style="font-size:10px">prestação · ${c.prazoRestante}m restantes</span>`;}
     else if(isSub){accentColor='var(--pink)';badge='<span class="pill" style="background:var(--pink-bg);color:var(--pink-text);font-size:10px">sub</span>';}
+    else if(isInvestRef){accentColor='var(--blue)';badge='<span class="pill pill-blue" style="font-size:10px">reforço</span>';}
+    else if(isPprRef){accentColor='var(--purple)';badge='<span class="pill" style="background:var(--purple-bg);color:var(--purple);font-size:10px">reforço</span>';}
     else if(isConta){accentColor='var(--blue)';badge='<span class="pill pill-blue" style="font-size:10px">conta</span>';}
     return`<div class="custo-row ${urgCls(c.dias)}" style="border-left-color:${accentColor||'var(--green)'}">
       <div class="row-left">
@@ -2444,7 +2791,7 @@ function renderCalDetail(custos){
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <span style="font-family:var(--mono)">€${fmt(c.valor)}</span>
-        ${!isCred?`<span class="${pillUrgCls(c.dias)}">${pillUrgLabel(c.dias)}</span>`:''}
+        <span class="${pillUrgCls(c.dias)}">${pillUrgLabel(c.dias)}</span>
       </div></div>`;
   }).join('');
 }
@@ -2618,93 +2965,31 @@ const style=document.createElement('style');
 style.textContent=`.cal-cell.has-sub{border-color:rgba(240,96,192,.3);background:rgba(240,96,192,.06)}.cal-cell.has-sub .cal-cell-name{color:var(--pink)}.cal-cell.has-sub .cal-cell-val{color:var(--pink)}.cal-cell.has-conta{border-color:rgba(96,160,240,.3);background:rgba(96,160,240,.06)}.cal-cell.has-conta .cal-cell-name{color:var(--blue)}.cal-cell.has-conta .cal-cell-val{color:var(--blue)}.cal-cell.has-cred{border-color:rgba(240,160,96,.25);}.cal-cell.has-cred .cal-cell-val{}`;
 document.head.appendChild(style);
 
-// ── TRANSFERÊNCIA ENTRE CONTAS ───────────────────────────────
-function fazerTransferencia(){
-  const origemId=parseInt(document.getElementById('tr-origem').value);
-  const destinoId=parseInt(document.getElementById('tr-destino').value);
-  const valor=parseFloat(document.getElementById('tr-valor').value);
-  const desc='Transferência';
-
-  if(!origemId||!destinoId){alert('Seleciona as duas contas.');return;}
-  if(origemId===destinoId){alert('As contas têm de ser diferentes.');return;}
-  if(!valor||valor<=0){alert('Introduz um valor válido.');return;}
-
-  const origem=contas.find(c=>c.id===origemId);
-  const destino=contas.find(c=>c.id===destinoId);
-  const saldoAtual=saldoEfetivo(origemId);
-
-  if(saldoAtual<valor){
-    if(!confirm(`Saldo disponível na conta "${origem.nome}" é €${fmt(saldoAtual)}. Continuar mesmo assim?`)) return;
-  }
-
-  const data=hoje.toISOString().split('T')[0];
-  const tsId=Date.now();
-
-  // Regista saída na conta de origem
-  transacoes.unshift({
-    id:tsId,
-    tipo:'despesa',
-    valor,
-    cat:'Transferência',
-    data,
-    desc:`${desc} → ${destino.nome}`,
-    contaId:origemId,
-    isTransferencia:true,
-    parId:tsId+1
-  });
-
-  // Regista entrada na conta de destino
-  transacoes.unshift({
-    id:tsId+1,
-    tipo:'receita',
-    valor,
-    cat:'Transferência',
-    data,
-    desc:`${desc} ← ${origem.nome}`,
-    contaId:destinoId,
-    isTransferencia:true,
-    parId:tsId
-  });
-
-  sv('fp_tx',transacoes);
-
-  // Reset form
-  document.getElementById('tr-valor').value='';
-  const ok=document.getElementById('tr-ok');
-  ok.style.display='inline';
-  setTimeout(()=>ok.style.display='none',2500);
-
-  // Refresh
-  renderContas();
-  if(document.getElementById('page-dashboard').classList.contains('active')) renderDash();
+function eliminarTodosDados(){
+  if(!confirm('Tens a certeza? Esta ação elimina TODOS os dados e não pode ser desfeita.')) return;
+  ['fp_tx','fp_orc','fp_metas','fp_cred','fp_contas','fp_ativos','fp_inv','fp_pprs','fp_subs','fp_snapshots'].forEach(k=>localStorage.removeItem(k));
+  transacoes=[];orcamentos={};metas=[];creditos=[];contas=[];ativos=[];investimentos=[];pprs=[];subscricoes=[];
+  renderDash();
+  const msg=document.getElementById('import-msg');
+  if(msg){msg.style.display='block';msg.style.color='var(--green)';msg.textContent='Todos os dados foram eliminados.';}
 }
 
 </script>
 
 <script>
 if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(regs=>regs.forEach(r=>r.unregister()));
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').catch(()=>{});
   });
 }
-</script>
 
-<!-- MOBILE NAV -->
-<nav class="mobile-primary" id="mobile-primary">
-  <div class="mp-item" id="mp-dinheiro" onclick="mpGroup('dinheiro')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.2 7a6 7 0 1 0 0 10"/><path d="M13 10H6m0 4h7"/></svg><span>Dinheiro</span></div>
-  <div class="mp-item" id="mp-obrigacoes" onclick="mpGroup('obrigacoes')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h2"/></svg><span>Obrigações</span></div>
-  <div class="mp-item mp-center active" id="mp-dashboard" onclick="mpDash()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></div>
-  <div class="mp-item" id="mp-patrimonio" onclick="mpGroup('patrimonio')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/></svg><span>Património</span></div>
-  <div class="mp-item" id="mp-settings" onclick="mpGroup('settings')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.657 3.582 3 8 3s8-1.343 8-3V6"/><path d="M4 12v6c0 1.657 3.582 3 8 3"/><path d="M16 19l3-3 3 3"/><path d="M19 16v6"/></svg><span>Definições</span></div>
-</nav>
-<nav class="mobile-secondary" id="mobile-secondary"></nav>
-
-<script>
+// ── MOBILE NAV ──────────────────────────────────────────────
 const MP_GROUPS = {
   dinheiro:   [{id:'transacoes',label:'Transações'},{id:'contas',label:'Contas'},{id:'orcamento',label:'Orçamento'}],
   obrigacoes: [{id:'creditos',label:'Créditos'},{id:'mapa',label:'Mapa prestações'},{id:'subscricoes',label:'Subscrições'},{id:'calendario',label:'Calendário'}],
   patrimonio: [{id:'ativos',label:'Ativos'},{id:'poupancas',label:'Poupanças'},{id:'investimentos',label:'Investimentos'},{id:'ppr',label:'PPR / Pensões'}],
-  settings:   [{id:'backup',label:'Backup'}]
+  settings:   [{id:'orcamento',label:'Orçamento'},{id:'backup',label:'Backup'}]
 };
 const MP_RENDERS = {
   dashboard:renderDash, transacoes:renderTx, orcamento:renderOrc,
@@ -2740,42 +3025,17 @@ function mpSub(id){
   if(el) el.classList.add('active');
   mpShowPage(id);
 }
-// TRANSFERÊNCIA ENTRE CONTAS
-function fazerTransferencia(){
-  const origemId=parseInt(document.getElementById('tr-origem').value);
-  const destinoId=parseInt(document.getElementById('tr-destino').value);
-  const valor=parseFloat(document.getElementById('tr-valor').value);
-  if(!origemId||!destinoId){alert('Seleciona as duas contas.');return;}
-  if(origemId===destinoId){alert('As contas têm de ser diferentes.');return;}
-  if(!valor||valor<=0){alert('Introduz um valor válido.');return;}
-  const origem=contas.find(c=>c.id===origemId);
-  const destino=contas.find(c=>c.id===destinoId);
-  const saldoAtual=saldoEfetivo(origemId);
-  if(saldoAtual<valor){
-    if(!confirm(`Saldo disponível em "${origem.nome}" é €${fmt(saldoAtual)}. Continuar?`)) return;
-  }
-  const data=hoje.toISOString().split('T')[0];
-  const tsId=Date.now();
-  transacoes.unshift({id:tsId,tipo:'despesa',valor,cat:'Transferência',data,desc:`Transferência → ${destino.nome}`,contaId:origemId,isTransferencia:true});
-  transacoes.unshift({id:tsId+1,tipo:'receita',valor,cat:'Transferência',data,desc:`Transferência ← ${origem.nome}`,contaId:destinoId,isTransferencia:true});
-  sv('fp_tx',transacoes);
-  document.getElementById('tr-valor').value='';
-  const ok=document.getElementById('tr-ok');
-  ok.style.display='inline';
-  setTimeout(()=>ok.style.display='none',2500);
-  renderContas();
-  if(document.getElementById('page-dashboard').classList.contains('active')) renderDash();
-}
-// ELIMINAR TODOS OS DADOS
-function eliminarTodosDados(){
-  if(!confirm('Tens a certeza? Esta ação elimina TODOS os dados e não pode ser desfeita.')) return;
-  ['fp_tx','fp_orc','fp_metas','fp_cred','fp_contas','fp_ativos','fp_inv','fp_pprs','fp_subs','fp_snapshots'].forEach(k=>localStorage.removeItem(k));
-  transacoes=[];orcamentos={};metas=[];creditos=[];contas=[];ativos=[];investimentos=[];pprs=[];subscricoes=[];
-  renderDash();
-  const msg=document.getElementById('import-msg');
-  if(msg){msg.style.display='block';msg.style.color='var(--green)';msg.textContent='Todos os dados foram eliminados.';}
-}
 </script>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-primary" id="mobile-primary">
+  <div class="mp-item" id="mp-dinheiro" onclick="mpGroup('dinheiro')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.2 7a6 7 0 1 0 0 10"/><path d="M13 10H6m0 4h7"/></svg><span>Dinheiro</span></div>
+  <div class="mp-item" id="mp-obrigacoes" onclick="mpGroup('obrigacoes')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h2"/></svg><span>Obrigações</span></div>
+  <div class="mp-item mp-center active" id="mp-dashboard" onclick="mpDash()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></div>
+  <div class="mp-item" id="mp-patrimonio" onclick="mpGroup('patrimonio')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/></svg><span>Património</span></div>
+  <div class="mp-item" id="mp-settings" onclick="mpGroup('settings')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.657 3.582 3 8 3s8-1.343 8-3V6"/><path d="M4 12v6c0 1.657 3.582 3 8 3"/><path d="M16 19l3-3 3 3"/><path d="M19 16v6"/></svg><span>Definições</span></div>
+</nav>
+<nav class="mobile-secondary" id="mobile-secondary"></nav>
 
 </body>
 </html>
