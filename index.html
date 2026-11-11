@@ -402,6 +402,19 @@ tr.past td { color: var(--text3); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 999px; }
 
+/* Cartões de valores: mostram o valor completo, por isso precisam de mais largura no desktop */
+.metric-value { white-space: nowrap; }
+@media (max-width: 768px) {
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 360px) {
+  .metric { padding-left: 12px !important; padding-right: 12px !important; }
+}
+@media (min-width: 769px) {
+  .metrics { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  #dash-metrics { grid-template-columns: repeat(3, 1fr); }
+}
+
 /* iOS: evita zoom automático ao focar campos (font-size < 16px provoca zoom) */
 @media (hover: none) and (pointer: coarse) {
   input, select, textarea,
@@ -1266,12 +1279,12 @@ function renderDash(){
   document.getElementById('dash-alertas').innerHTML=alertas.join('');
 
   document.getElementById('dash-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Receitas</div><div class="metric-value green">€${fmtK(rec)}</div></div>
-    <div class="metric"><div class="metric-label">Despesas</div><div class="metric-value red">€${fmtK(desp)}</div></div>
-    <div class="metric"><div class="metric-label">Saldo mês</div><div class="metric-value ${saldo>=0?'green':'red'}">${saldo<0?'-':''}€${fmtK(Math.abs(saldo))}</div></div>
-    <div class="metric"><div class="metric-label">Prestações/mês</div><div class="metric-value amber">€${fmtK(prestMes)}</div></div>
-    <div class="metric"><div class="metric-label">Em dívida</div><div class="metric-value red">€${fmtK(divida)}</div></div>
-    <div class="metric"><div class="metric-label">Património</div><div class="metric-value ${patrimLiq>=0?'green':'red'}">${patrimLiq<0?'-':''}€${fmtK(Math.abs(patrimLiq))}</div></div>
+    <div class="metric"><div class="metric-label">Receitas</div><div class="metric-value green">€${fmt(rec)}</div></div>
+    <div class="metric"><div class="metric-label">Despesas</div><div class="metric-value red">€${fmt(desp)}</div></div>
+    <div class="metric"><div class="metric-label">Saldo mês</div><div class="metric-value ${saldo>=0?'green':'red'}">${saldo<0?'-':''}€${fmt(Math.abs(saldo))}</div></div>
+    <div class="metric"><div class="metric-label">Prestações/mês</div><div class="metric-value amber">€${fmt(prestMes)}</div></div>
+    <div class="metric"><div class="metric-label">Em dívida</div><div class="metric-value red">€${fmt(divida)}</div></div>
+    <div class="metric"><div class="metric-label">Património</div><div class="metric-value ${patrimLiq>=0?'green':'red'}">${patrimLiq<0?'-':''}€${fmt(Math.abs(patrimLiq))}</div></div>
   `;
 
   const catMap={};
@@ -1283,7 +1296,7 @@ function renderDash(){
   if(catsChart)catsChart.destroy();
   const catCtx=document.getElementById('chartCats');
   if(sorted.length){
-    document.getElementById('dash-cats-total-val').textContent='€'+fmtK(totalDesp);
+    document.getElementById('dash-cats-total-val').textContent='€'+fmt(totalDesp);
     catsChart=new Chart(catCtx,{
       type:'doughnut',
       data:{
@@ -1724,11 +1737,11 @@ function renderMapa(){
   const prestacaoSeguinte=rows[0]?.prest||0;
   const efetiva=estado.saldo>0?(((totalJ+totalIS)/estado.saldo)*100).toFixed(1):0;
   document.getElementById('mapa-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Capital em dívida hoje</div><div class="metric-value red">€${fmtK(estado.saldo)}</div></div>
-    <div class="metric"><div class="metric-label">Próxima prestação</div><div class="metric-value amber">€${fmtK(prestacaoSeguinte)}</div></div>
-    <div class="metric"><div class="metric-label">Total por pagar</div><div class="metric-value red">€${fmtK(totalPagar)}</div></div>
-    <div class="metric"><div class="metric-label">Juros por pagar</div><div class="metric-value red">€${fmtK(totalJ)}</div></div>
-    <div class="metric"><div class="metric-label">IS por pagar</div><div class="metric-value red">€${fmtK(totalIS)}</div></div>
+    <div class="metric"><div class="metric-label">Capital em dívida hoje</div><div class="metric-value red">€${fmt(estado.saldo)}</div></div>
+    <div class="metric"><div class="metric-label">Próxima prestação</div><div class="metric-value amber">€${fmt(prestacaoSeguinte)}</div></div>
+    <div class="metric"><div class="metric-label">Total por pagar</div><div class="metric-value red">€${fmt(totalPagar)}</div></div>
+    <div class="metric"><div class="metric-label">Juros por pagar</div><div class="metric-value red">€${fmt(totalJ)}</div></div>
+    <div class="metric"><div class="metric-label">IS por pagar</div><div class="metric-value red">€${fmt(totalIS)}</div></div>
     <div class="metric"><div class="metric-label">Taxa anual</div><div class="metric-value blue">${c.taxa}%</div></div>
     <div class="metric"><div class="metric-label">Custo real</div><div class="metric-value red">${efetiva}%</div></div>
   `;
@@ -2080,9 +2093,9 @@ function renderCal(){
   const prox60=todos.filter(c=>c.dias>=0&&c.dias<=60);
   const urg=todos.filter(c=>c.dias>=0&&c.dias<=30);
   document.getElementById('cal-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Custo anual total</div><div class="metric-value red">€${fmtK(totalAnual)}</div></div>
-    <div class="metric"><div class="metric-label">Média mensal</div><div class="metric-value amber">€${fmtK(totalAnual/12)}</div></div>
-    <div class="metric"><div class="metric-label">Próximos 60 dias</div><div class="metric-value ${prox60.length?'amber':'green'}">€${fmtK(prox60.reduce((s,c)=>s+c.valor,0))}</div></div>
+    <div class="metric"><div class="metric-label">Custo anual total</div><div class="metric-value red">€${fmt(totalAnual)}</div></div>
+    <div class="metric"><div class="metric-label">Média mensal</div><div class="metric-value amber">€${fmt(totalAnual/12)}</div></div>
+    <div class="metric"><div class="metric-label">Próximos 60 dias</div><div class="metric-value ${prox60.length?'amber':'green'}">€${fmt(prox60.reduce((s,c)=>s+c.valor,0))}</div></div>
     <div class="metric"><div class="metric-label">Urgentes (7d)</div><div class="metric-value ${urg.length?'red':'green'}">${urg.length}</div></div>
   `;
   const porMes=Array(12).fill(0).map(()=>({valor:0,urg:false}));
@@ -2138,9 +2151,9 @@ function renderInv(){
   const totalAt=investimentos.reduce((s,i)=>s+i.atual,0);
   const ganho=totalAt-totalInv;
   document.getElementById('inv-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Total investido</div><div class="metric-value blue">€${fmtK(totalInv)}</div></div>
-    <div class="metric"><div class="metric-label">Valor atual</div><div class="metric-value blue">€${fmtK(totalAt)}</div></div>
-    <div class="metric"><div class="metric-label">Ganho / perda</div><div class="metric-value ${ganho>=0?'green':'red'}">${ganho>=0?'+':''}€${fmtK(Math.abs(ganho))}</div></div>
+    <div class="metric"><div class="metric-label">Total investido</div><div class="metric-value blue">€${fmt(totalInv)}</div></div>
+    <div class="metric"><div class="metric-label">Valor atual</div><div class="metric-value blue">€${fmt(totalAt)}</div></div>
+    <div class="metric"><div class="metric-label">Ganho / perda</div><div class="metric-value ${ganho>=0?'green':'red'}">${ganho>=0?'+':''}€${fmt(Math.abs(ganho))}</div></div>
   `;
   const el=document.getElementById('lista-inv');
   if(!investimentos.length){el.innerHTML='<div class="card"><div style="color:var(--text3);font-size:13px">Nenhum investimento</div></div>';return;}
@@ -2601,10 +2614,10 @@ function renderCal(){
   const totalPrestMes=creditos.reduce((s,c)=>s+(estadoCreditoHoje(c).futuros[0]?.prest||0),0);
   const totalReforcosMes=investimentos.reduce((s,i)=>s+(+i.mensal||0),0)+pprs.reduce((s,p)=>s+(+p.mensal||0),0);
   document.getElementById('cal-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Prestações/mês (ativas)</div><div class="metric-value red">€${fmtK(totalPrestMes)}</div></div>
-    <div class="metric"><div class="metric-label">Subscrições/mês</div><div class="metric-value" style="color:var(--pink)">€${fmtK(subscricoes.filter(s=>s.ativa).reduce((s,sub)=>s+valorMensal(sub),0))}</div></div>
-    <div class="metric"><div class="metric-label">Reforços/mês</div><div class="metric-value blue">€${fmtK(totalReforcosMes)}</div></div>
-    <div class="metric"><div class="metric-label">Próximos 60 dias</div><div class="metric-value ${prox60.length?'amber':'green'}">€${fmtK(prox60.reduce((s,c)=>s+c.valor,0))}</div></div>
+    <div class="metric"><div class="metric-label">Prestações/mês (ativas)</div><div class="metric-value red">€${fmt(totalPrestMes)}</div></div>
+    <div class="metric"><div class="metric-label">Subscrições/mês</div><div class="metric-value" style="color:var(--pink)">€${fmt(subscricoes.filter(s=>s.ativa).reduce((s,sub)=>s+valorMensal(sub),0))}</div></div>
+    <div class="metric"><div class="metric-label">Reforços/mês</div><div class="metric-value blue">€${fmt(totalReforcosMes)}</div></div>
+    <div class="metric"><div class="metric-label">Próximos 60 dias</div><div class="metric-value ${prox60.length?'amber':'green'}">€${fmt(prox60.reduce((s,c)=>s+c.valor,0))}</div></div>
     <div class="metric"><div class="metric-label">Urgentes (7d)</div><div class="metric-value ${urg.length?'red':'green'}">${urg.length}</div></div>
   `;
   const porMes=Array(12).fill(0).map(()=>({ativos:0,subs:0,contas:0,creds:0,reforcos:0,urg:false,temSub:false,temConta:false,temCred:false,temReforco:false}));
@@ -2848,6 +2861,28 @@ function verificarBackup(){
   el.innerHTML='<div class="alert-banner" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:180px">'+txt+' Os dados só existem neste telemóvel/browser.</div><button class="btn-primary" onclick="exportarDados()" style="font-size:12px;padding:6px 14px">Exportar agora</button></div>';
 }
 verificarBackup();
+
+// Ajusta o tamanho da letra dos valores nos cartões para nunca saírem do cartão
+function ajustarMetricas(){
+  document.querySelectorAll('.metric-value').forEach(el=>{
+    el.style.removeProperty('font-size');
+    if(!el.offsetParent)return; // página escondida
+    let f=parseFloat(getComputedStyle(el).fontSize);
+    while(el.scrollWidth>el.clientWidth+0.5&&f>9){
+      f-=0.5;
+      el.style.setProperty('font-size',f+'px','important');
+    }
+  });
+}
+(function(){
+  let pendente=false;
+  const agendar=()=>{if(pendente)return;pendente=true;requestAnimationFrame(()=>{pendente=false;try{ajustarMetricas();}catch(e){}});};
+  new MutationObserver(agendar).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  window.addEventListener('resize',agendar);
+  window.addEventListener('orientationchange',agendar);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(agendar);
+  agendar();
+})();
 
 function importarDados(event){
   const file=event.target.files[0];
