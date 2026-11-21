@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanças Pessoais</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="stylesheet" href="css/styles.css">
+<meta name="theme-color" content="#0f0f11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="fin.pessoal">
+<meta name="application-name" content="fin.pessoal">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">fin<span>.</span>pessoal</div>
+  <div class="nav-item active" onclick="goto('dashboard',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg> Dashboard</div>
+  <div class="nav-item" onclick="goto('transacoes',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/></svg> Transações</div>
+  <div class="nav-item" onclick="goto('contas',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 10v11M12 10v11M16 10v11"/></svg> Contas</div>
+  <div class="nav-item" onclick="goto('previsao',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6" stroke-dasharray="2 3"/></svg> Previsão de saldo</div>
+  <div class="nav-item" onclick="goto('calendario',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/></svg> Calendário custos</div>
+  <div class="nav-sep"></div>
+  <div class="nav-item" onclick="goto('creditos',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h2"/></svg> Créditos</div>
+  <div class="nav-item" onclick="goto('mapa',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M10 5v16"/></svg> Mapa prestações</div>
+  <div class="nav-item" onclick="goto('simulador',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/></svg> Simulador</div>
+  <div class="nav-item" onclick="goto('subscricoes',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v-3a4 4 0 0 1 4-4h13"/><path d="m17 2 4 3-4 3"/><path d="M20 12v3a4 4 0 0 1-4 4H3"/><path d="m7 22-4-3 4-3"/></svg> Subscrições</div>
+  <div class="nav-sep"></div>
+  <div class="nav-item" onclick="goto('ativos',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/></svg> Ativos</div>
+  <div class="nav-item" onclick="goto('poupancas',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.2 7a6 7 0 1 0 0 10"/><path d="M13 10H6m0 4h7"/></svg> Poupanças</div>
+  <div class="nav-item" onclick="goto('investimentos',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg> Investimentos</div>
+  <div class="nav-item" onclick="goto('ppr',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-4 1.5-7 4-7 8.5a9 9 0 0 0 7 8.5 9 9 0 0 0 7-8.5C19 7 16 4.5 12 3z"/><path d="m9 12 2 2 4-4"/></svg> PPR / Pensões</div>
+  <div class="nav-sep"></div>
+  <div class="nav-item" onclick="goto('orcamento',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2A9 9 0 1 0 20.8 14H12a2 2 0 0 1-2-2V3.2z"/><path d="M13.2 3.05A9 9 0 0 1 20.95 10.8H14a2 2 0 0 1-2-2V3.05z" opacity=".5"/></svg> Orçamento</div>
+  <div class="nav-item" onclick="goto('backup',this)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.657 3.582 3 8 3s8-1.343 8-3V6"/><path d="M4 12v6c0 1.657 3.582 3 8 3"/><path d="M16 19l3-3 3 3"/><path d="M19 16v6"/></svg> Backup</div>
+</nav>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div class="page-title">Dashboard</div>
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:1.25rem">
+    <button class="btn-ghost" onclick="mudaMes(-1)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <span id="dash-mes-label" style="font-size:14px;font-weight:500;min-width:120px;text-align:center"></span>
+    <button class="btn-ghost" onclick="mudaMes(1)"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+  <div id="dash-alertas"></div>
+  <div class="dash-newtx">
+    <button class="dash-newtx-main" onclick="openTxModal()">+ Nova Transação</button>
+  </div>
+  <div class="metrics" id="dash-metrics"></div>
+  <div id="dash-contas-wrap"></div>
+  <div id="tx-modal" class="tx-modal" onclick="if(event.target===this)closeTxModal()" aria-hidden="true">
+    <div class="tx-modal-panel" role="dialog" aria-modal="true" aria-labelledby="tx-modal-title">
+      <div class="tx-modal-head"><div id="tx-modal-title" class="tx-modal-title">Nova transação</div><button class="btn-ghost" type="button" onclick="closeTxModal()" aria-label="Fechar">✕</button></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Tipo</label><select id="t-tipo" onchange="onTipoTxChange()"><option value="despesa">Despesa</option><option value="receita">Receita</option><option value="transferencia">Transferência entre contas</option></select></div>
+      <div class="form-group"><label>Valor (€)</label><input type="number" id="t-valor" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group" id="t-cat-group"><label>Categoria</label>
+        <select id="t-cat">
+          <option>Alimentação</option><option>Transportes</option><option>Habitação</option>
+          <option>Lazer</option><option>Saúde</option><option>Educação</option>
+          <option>Vestuário</option><option>Poupança</option><option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group"><label id="t-conta-label">Conta</label><select id="t-conta"><option value="">— sem conta —</option></select></div>
+      <div class="form-group" id="t-dest-group" style="display:none"><label>Conta destino</label><select id="t-conta-dest"><option value="">— escolher —</option></select></div>
+      <div class="form-group"><label>Data</label><input type="date" id="t-data"></div>
+      <div class="form-group full"><label>Descrição</label><input type="text" id="t-desc" placeholder="ex: Supermercado Continente"></div>
+    </div>
+    <button class="btn-primary" onclick="addTx()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar</button>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Despesas por categoria</div>
+      <div style="position:relative;width:160px;height:160px;margin:0 auto 1rem">
+        <canvas id="chartCats" role="img" aria-label="Gráfico de despesas por categoria"></canvas>
+        <div id="dash-cats-total" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+          <div style="font-size:11px;color:var(--text3)">total</div>
+          <div style="font-size:15px;font-weight:500;font-family:var(--mono)" id="dash-cats-total-val">—</div>
+        </div>
+      </div>
+      <div id="dash-cats"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Últimas transações</div>
+      <div id="dash-recent"></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Balanço patrimonial</div>
+      <div id="dash-balanco"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Receitas vs despesas (6 meses)</div>
+      <div style="position:relative;height:180px"><canvas id="chartDash" role="img" aria-label="Receitas e despesas últimos 6 meses">Gráfico receitas vs despesas.</canvas></div>
+    </div>
+  </div>
+  <div id="dash-orcamento-wrap"><!-- orçamento inserido por JS --></div>
+  <div class="card" id="dash-evolucao-wrap">
+    <div class="card-title">Evolução — Património vs Dívida</div>
+    <div style="position:relative;height:220px"><canvas id="chartEvolucao" role="img" aria-label="Evolução do património vs dívida">Gráfico evolução património vs dívida.</canvas></div>
+  </div>
+</div>
+
+<!-- TRANSAÇÕES -->
+<div id="page-transacoes" class="page">
+  <div class="page-title">Transações</div>
+  <div class="card">
+    <div class="card-title">Histórico</div>
+    <div class="form-grid" style="margin-bottom:12px">
+      <div class="form-group"><label for="tx-filtro-mes">Mês</label>
+        <input type="month" id="tx-filtro-mes" onchange="filtrarTx()">
+      </div>
+      <div class="form-group"><label for="tx-filtro-conta">Conta</label>
+        <select id="tx-filtro-conta" onchange="filtrarTx()">
+          <option value="">Todas as contas</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <div id="tx-filtro-resumo" style="font-size:12px;color:var(--text3)"></div>
+      <button class="btn-ghost" type="button" onclick="limparFiltrosTx()" style="font-size:12px;padding:5px 9px">Limpar filtros</button>
+    </div>
+    <div id="tx-filtro-totais" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px"></div>
+    <div id="lista-tx"></div>
+  </div>
+</div>
+
+<!-- ORÇAMENTO -->
+<div id="page-orcamento" class="page">
+  <div class="page-title">Orçamento mensal</div>
+  <div class="card">
+    <div class="card-title">Categorias de despesa</div>
+    <div id="orc-categorias" class="budget-category-list"></div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:14px;max-width:560px">
+      <input type="text" id="orc-nova-cat" placeholder="Nome da nova categoria" style="flex:1;min-width:0">
+      <button class="btn-primary" type="button" onclick="addCategoriaOrc()">＋ Criar categoria</button>
+    </div>
+    <div class="sub" style="margin-top:8px">As categorias criadas ficam disponíveis nos formulários de despesas e no orçamento.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Definir limite</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Categoria</label>
+        <select id="o-cat">
+          <option>Alimentação</option><option>Transportes</option><option>Habitação</option>
+          <option>Lazer</option><option>Saúde</option><option>Educação</option><option>Vestuário</option><option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Limite (€)</label><input type="number" id="o-lim" placeholder="0.00" min="0"></div>
+    </div>
+    <button class="btn-primary" onclick="addOrc()">Guardar</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Progresso este mês</div>
+    <div id="orc-barras"></div>
+  </div>
+</div>
+
+<!-- POUPANÇAS -->
+<div id="page-poupancas" class="page">
+  <div class="page-title">Metas de poupança</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-primary" type="button" onclick="abrirModalMeta()">＋ Nova Meta</button>
+  </div>
+  <div id="modal-poupancas" class="account-modal" onclick="if(event.target===this)fecharModalMeta()">
+    <div class="account-modal-panel credit-modal-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div class="card-title" style="margin:0">Nova meta</div>
+        <button class="btn-ghost" type="button" onclick="fecharModalMeta()" aria-label="Fechar">✕</button>
+      </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Nome da meta</label><input type="text" id="p-nome"></div>
+      <div class="form-group"><label>Objetivo total (€)</label><input type="number" id="p-obj" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Já poupado (€)</label><input type="number" id="p-atual" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Reforço mensal (€)</label><input type="number" id="p-reforco" placeholder="0.00 — opcional" min="0" step="0.01"></div>
+      <div class="form-group"><label>Dia do reforço</label><input type="number" id="p-dia" min="1" max="31"></div>
+      <div class="form-group"><label>Categoria da despesa</label>
+        <select id="p-cat">
+          <option value="">— sem categoria —</option>
+          <option>Poupança</option><option>Fundo de emergência</option>
+          <option>Férias</option><option>Educação</option><option>Habitação</option><option>Outro</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn-ghost" type="button" onclick="fecharModalMeta()">Cancelar</button>
+      <button class="btn-primary" type="button" onclick="addMeta()">Criar meta</button>
+    </div>
+    </div>
+  </div>
+  <div id="lista-metas"></div>
+</div>
+
+<!-- CRÉDITOS -->
+<div id="page-creditos" class="page">
+  <div class="page-title">Créditos ativos</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-primary" type="button" onclick="abrirModalCredito()">＋ Novo Crédito</button>
+  </div>
+  <div id="modal-credito" class="account-modal" onclick="if(event.target===this)fecharModalCredito()">
+    <div class="account-modal-panel credit-modal-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div class="card-title" style="margin:0">Adicionar crédito</div>
+        <button class="btn-ghost" type="button" onclick="fecharModalCredito()" aria-label="Fechar">✕</button>
+      </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Nome / banco</label><input type="text" id="c-nome"></div>
+      <div class="form-group"><label>Tipo</label><select id="c-tipo"><option>Crédito pessoal</option><option>Cartão de crédito</option><option>Hipoteca</option><option>Leasing</option><option>Outro</option></select></div>
+      <div class="form-group"><label>Capital inicial (€)</label><input type="number" id="c-divida" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Taxa anual (%)</label><input type="number" id="c-taxa" min="0" step="0.01"></div>
+      <div class="form-group"><label>Prestação mensal (€)</label><input type="number" id="c-prest" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Prazo total (meses)</label><input type="number" id="c-prazo" min="1"></div>
+      <div class="form-group"><label>Dia de vencimento</label><input type="number" id="c-dia" min="1" max="31"></div>
+      <div class="form-group"><label>Data início (aaaa-mm)</label><input type="month" id="c-inicio"></div>
+      <div class="form-group"><label>Juros no mês inicial (€)</label><input type="number" id="c-juros-inic" value="0" min="0" step="0.01"></div>
+      <div class="form-group"><label>IS sobre juros (%)</label><input type="number" id="c-is-juros" value="4" min="0" step="0.01"></div>
+      <div class="form-group"><label>Conta a debitar prestação</label><select id="c-conta"><option value="">— sem conta —</option></select></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Comissões e encargos</div>
+      <div id="lista-encargos-form" style="margin-bottom:10px"></div>
+      <div class="form-grid" id="encargo-form-fields">
+        <div class="form-group"><label>Descrição do encargo</label><input type="text" id="e-desc"></div>
+        <div class="form-group"><label>Valor (€)</label><input type="number" id="e-valor" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="form-group"><label>Tipo</label>
+          <select id="e-tipo">
+            <option value="pontual">Pontual (já pago)</option>
+            <option value="diluido">Diluído na prestação</option>
+            <option value="anual">Anual (recorrente)</option>
+          </select>
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end">
+          <button class="btn-ghost" onclick="addEncargoTemp()" style="width:100%"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Adicionar encargo</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn-ghost" type="button" onclick="fecharModalCredito()">Cancelar</button>
+      <button class="btn-primary" onclick="addCredito()">＋ Adicionar crédito</button>
+    </div>
+    </div>
+  </div>
+  <div id="lista-creditos"></div>
+</div>
+
+<!-- MAPA PRESTAÇÕES -->
+<div id="page-mapa" class="page">
+  <div class="page-title">Mapa de prestações</div>
+  <div class="card" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <select id="mapa-sel" onchange="renderMapa()" style="flex:1;min-width:200px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:8px 10px;outline:none"></select>
+    <button class="btn-ghost" onclick="renderMapa()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 9 4.9L6 3"/><path d="M3 3v5h5"/></svg> Atualizar</button>
+  </div>
+  <div class="metrics" id="mapa-metrics"></div>
+  <div class="card">
+    <div class="card-title">Amortização mensal</div>
+    <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:10px"><input type="checkbox" id="mapa-pagas" onchange="toggleMapaPagas(this.checked)"> Mostrar prestações já pagas</label>
+    <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Data</th><th>Prestação</th><th>Capital</th><th>Juros</th><th>IS</th><th>Saldo devedor</th></tr></thead><tbody id="mapa-body"></tbody></table></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px">Toca nos juros de uma prestação para a corrigir com o valor real do banco (✎ = corrigida).</div>
+  </div>
+</div>
+
+<!-- PREVISÃO DE SALDO -->
+<div id="page-previsao" class="page">
+  <div class="page-title">Previsão de saldo</div>
+  <div id="prev-vazio" class="card" style="display:none"><div style="color:var(--text3);font-size:13px">Ainda não tens contas. Adiciona uma na página Contas para veres a previsão de saldo.</div></div>
+  <div id="prev-corpo">
+    <div class="prev-bar">
+      <div class="prev-seg" role="group" aria-label="Horizonte">
+        <button type="button" data-dias="30" onclick="prevSetDias(30)">30 dias</button>
+        <button type="button" data-dias="60" class="active" onclick="prevSetDias(60)">60 dias</button>
+        <button type="button" data-dias="90" onclick="prevSetDias(90)">90 dias</button>
+      </div>
+      <label class="prev-check"><input type="checkbox" id="prev-media" onchange="prevToggleMedia()"> Incluir despesas habituais (média dos últimos 90 dias)</label>
+    </div>
+    <div id="prev-alertas"></div>
+    <div class="prev-contas" id="prev-contas"></div>
+    <div class="card">
+      <div class="card-title">Saldo previsto por conta</div>
+      <div style="position:relative;height:240px"><canvas id="chartPrev" role="img" aria-label="Saldo previsto de cada conta"></canvas></div>
+      <div class="sim-note" id="prev-nota"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Entradas e saídas previstas</div>
+      <div class="sim-hint" style="margin-bottom:12px">Para o que não é fixo: o salário do mês, um reembolso, uma despesa grande. Entra só na previsão e não altera os teus saldos.</div>
+      <div class="prev-form">
+        <div class="form-group"><label for="prev-tipo">Tipo</label><select id="prev-tipo"><option value="entrada">Entrada</option><option value="saida">Saída</option></select></div>
+        <div class="form-group"><label for="prev-data">Data</label><input type="date" id="prev-data"></div>
+        <div class="form-group"><label for="prev-valor">Valor (€)</label><input type="number" id="prev-valor" min="0" step="0.01" placeholder="0.00"></div>
+        <div class="form-group"><label for="prev-conta">Conta</label><select id="prev-conta"></select></div>
+        <div class="form-group"><label for="prev-desc">Descrição</label><input type="text" id="prev-desc" placeholder="ex: Salário"></div>
+        <button class="btn-primary" type="button" onclick="prevAdd()">＋ Adicionar</button>
+      </div>
+      <div class="prev-lista" id="prev-lista"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Próximos movimentos</div>
+      <div class="tbl-wrap"><table class="prev-table"><thead><tr><th>Data</th><th>Movimento</th><th>Valor</th><th>Saldo</th></tr></thead><tbody id="prev-body"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIMULADOR DE AMORTIZAÇÃO -->
+<div id="page-simulador" class="page">
+  <div class="page-title">Simulador de amortização</div>
+  <div id="sim-vazio" class="card" style="display:none"><div style="color:var(--text3);font-size:13px">Ainda não tens créditos. Adiciona um na página Créditos para poderes simular amortizações.</div></div>
+  <div id="sim-corpo" class="sim-grid">
+    <div class="card">
+      <div class="card-title">Parâmetros</div>
+      <div class="sim-form">
+        <div class="form-group"><label for="sim-credito">Crédito</label><select id="sim-credito" onchange="simCalc()"></select></div>
+        <div class="form-group"><label for="sim-valor">Valor a amortizar (€)</label>
+          <input type="number" id="sim-valor" placeholder="0.00" min="0" step="0.01" oninput="simCalc()">
+          <div class="sim-chips" id="sim-chips"></div>
+          <div class="sim-hint" id="sim-saldo"></div>
+        </div>
+        <div class="form-group sim-half"><label for="sim-data">Data da amortização</label><input type="date" id="sim-data" onchange="simCalc()"></div>
+        <div class="form-group sim-half"><label for="sim-comissao">Comissão (%)</label>
+          <input type="number" id="sim-comissao" value="0" min="0" step="0.01" oninput="simCalc()">
+          <div class="sim-hint" id="sim-comissao-eur"></div>
+        </div>
+        <div class="form-group"><label>Depois da amortização</label>
+          <div class="sim-seg"><button type="button" data-modo="prazo" class="active" onclick="simSetModo('prazo')">Reduzir prazo</button><button type="button" data-modo="prestacao" onclick="simSetModo('prestacao')">Reduzir prestação</button></div>
+        </div>
+        <div class="form-group sim-half"><label for="sim-rep">Repetir</label>
+          <select id="sim-rep" onchange="simRepChange()"><option value="0">Só uma vez</option><option value="1">Todos os meses</option><option value="3">Todos os 3 meses</option><option value="6">Todos os 6 meses</option><option value="12">Todos os anos</option></select>
+        </div>
+        <div class="form-group sim-half" id="sim-vezes-wrap" style="display:none"><label for="sim-vezes">N.º de vezes</label>
+          <input type="number" id="sim-vezes" min="2" max="60" value="5" oninput="simCalc()">
+        </div>
+        <div class="sim-hint" id="sim-vezes-total" style="margin-top:-6px"></div>
+        <button class="btn-ghost" type="button" id="sim-guardar" onclick="simGuardarCenario()" disabled>＋ Guardar como cenário</button>
+      </div>
+    </div>
+    <div class="sim-res">
+      <div id="sim-aviso"></div>
+      <div class="sim-hero" id="sim-hero"></div>
+      <div class="card">
+        <div class="card-title">Comparação</div>
+        <div class="tbl-wrap"><table class="sim-table"><thead><tr><th></th><th>Atual</th><th>Depois</th><th>Diferença</th></tr></thead><tbody id="sim-body"></tbody></table></div>
+      </div>
+      <div class="card" id="sim-inv">
+        <div class="card-title">Amortizar ou investir?</div>
+        <div class="sim-inline">
+          <div class="form-group"><label for="sim-rent">Rentabilidade esperada (% ao ano)</label><input type="number" id="sim-rent" step="0.1" min="0" oninput="simCalc()"></div>
+          <div class="form-group"><label for="sim-imp">Imposto sobre o rendimento (%)</label><input type="number" id="sim-imp" value="28" step="1" min="0" max="100" oninput="simCalc()"></div>
+        </div>
+        <div id="sim-inv-res"></div>
+      </div>
+      <div class="card" id="sim-cen" style="display:none">
+        <div class="card-title">Cenários guardados</div>
+        <div class="tbl-wrap"><table class="sim-table cen-table"><thead><tr><th>Cenário</th><th>Amortizado</th><th>Poupança</th><th>Por €100</th></tr></thead><tbody id="sim-cen-body"></tbody></table></div>
+        <div class="sim-note">Clica num cenário para o carregar. A verde, o melhor de cada coluna. «Por €100» é a poupança líquida por cada 100 € amortizados.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Capital em dívida ao longo do tempo</div>
+        <div style="position:relative;height:220px"><canvas id="chartSim" role="img" aria-label="Capital em dívida com e sem amortização"></canvas></div>
+      </div>
+      <div class="sim-actions">
+        <div class="sim-note">Ao registar, a amortização passa a contar no plano do crédito, no Mapa de prestações e no calendário. Podes apagá-la na página Créditos.</div>
+        <button class="btn-primary" id="sim-registar" type="button" onclick="simRegistar()" disabled>Registar esta amortização</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTAS -->
+<div id="page-contas" class="page">
+  <div class="page-title">Contas bancárias</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-primary" type="button" onclick="abrirModalConta()">＋ Nova Conta</button>
+  </div>
+  <div id="modal-conta" class="account-modal" onclick="if(event.target===this)fecharModalConta()">
+    <div class="account-modal-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div class="card-title" style="margin:0">Adicionar conta</div>
+        <button class="btn-ghost" type="button" onclick="fecharModalConta()" aria-label="Fechar">✕</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Nome / banco</label><input type="text" id="cn-nome"></div>
+        <div class="form-group"><label>Saldo disponível (€)</label><input type="number" id="cn-saldo" placeholder="0.00" step="0.01"></div>
+        <div class="form-group"><label>Tipo</label><select id="cn-tipo"><option>Conta à ordem</option><option>Conta poupança</option><option>Conta a prazo</option><option>Conta cofre</option></select></div>
+        <div class="form-group"><label>Taxa de juro anual (% — se aplicável)</label><input type="number" id="cn-taxa" min="0" step="0.01"></div>
+        <div class="form-group"><label>Periodicidade do juro</label>
+          <select id="cn-juro-periodo">
+            <option value="nenhum">Sem juros</option>
+            <option value="diario">Diário (sobre saldo)</option>
+            <option value="mensal">Mensal</option>
+            <option value="anual">Anual</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Comissão mensal (€ — ex: manutenção, cartão)</label><input type="number" id="cn-comissao" placeholder="0.00 — deixar 0 se não há" min="0" step="0.01"></div>
+        <div class="form-group"><label>Dia da comissão</label><input type="number" id="cn-comissao-dia" min="1" max="31"></div>
+        <div class="form-group"><label>Descrição da comissão</label><input type="text" id="cn-comissao-desc"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px">
+        <button class="btn-primary" onclick="addConta()">＋ Adicionar conta</button>
+      </div>
+    </div>
+  </div>
+  <div id="lista-contas"></div>
+</div>
+
+<!-- ATIVOS -->
+<div id="page-ativos" class="page">
+  <div class="page-title">Ativos físicos</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-primary" type="button" onclick="abrirModalAtivo()">＋ Novo Ativo</button>
+  </div>
+  <div id="modal-ativos" class="account-modal" onclick="if(event.target===this)fecharModalAtivo()">
+    <div class="account-modal-panel credit-modal-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div class="card-title" style="margin:0">Novo ativo</div>
+        <button class="btn-ghost" type="button" onclick="fecharModalAtivo()" aria-label="Fechar">✕</button>
+      </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Descrição</label><input type="text" id="at-nome"></div>
+      <div class="form-group"><label>Tipo</label><select id="at-tipo"><option>Automóvel</option><option>Imóvel</option><option>Equipamento</option><option>Outro</option></select></div>
+      <div class="form-group"><label>Valor de aquisição (€)</label><input type="number" id="at-aq" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Valor de mercado (€)</label><input type="number" id="at-mkt" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Ano de aquisição</label><input type="number" id="at-ano" min="1900" max="2099"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn-ghost" type="button" onclick="fecharModalAtivo()">Cancelar</button>
+      <button class="btn-primary" type="button" onclick="addAtivo()">Criar ativo</button>
+    </div>
+    </div>
+  </div>
+  <div id="lista-ativos"></div>
+</div>
+
+<!-- CALENDÁRIO CUSTOS -->
+<div id="page-calendario" class="page">
+  <div class="page-title">Calendário de custos</div>
+  <div class="metrics" id="cal-metrics"></div>
+  <div class="card">
+    <div id="cal-annual-view" class="cal-annual-view">
+      <div class="card-title">Visão anual <span style="font-size:10px;text-transform:none;letter-spacing:0">— duplo clique para abrir o mês</span></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div id="cal-month-view" class="cal-month-view" aria-live="polite">
+      <div class="cal-month-nav">
+        <button type="button" class="btn-ghost cal-back-btn" onclick="closeMesCal()">← Ano</button>
+        <button type="button" class="btn-ghost cal-nav-btn" onclick="moveMesCal(-1)" aria-label="Mês anterior">‹</button>
+        <div class="cal-month-heading" id="cal-month-heading"></div>
+        <button type="button" class="btn-ghost cal-nav-btn" onclick="moveMesCal(1)" aria-label="Mês seguinte">›</button>
+      </div>
+      <div class="month-weekdays" aria-hidden="true"><div class="month-weekday">Seg</div><div class="month-weekday">Ter</div><div class="month-weekday">Qua</div><div class="month-weekday">Qui</div><div class="month-weekday">Sex</div><div class="month-weekday">Sáb</div><div class="month-weekday">Dom</div></div>
+      <div class="month-days" id="month-days"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" id="cal-detail-title">Próximos pagamentos</div>
+    <div id="cal-detail"></div>
+  </div>
+</div>
+
+<!-- INVESTIMENTOS -->
+<div id="page-investimentos" class="page">
+  <div class="page-title">Investimentos</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-primary" type="button" onclick="abrirModalInv()">＋ Novo Investimento</button>
+  </div>
+  <div id="modal-investimentos" class="account-modal" onclick="if(event.target===this)fecharModalInv()">
+    <div class="account-modal-panel credit-modal-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div class="card-title" style="margin:0">Registar investimento</div>
+        <button class="btn-ghost" type="button" onclick="fecharModalInv()" aria-label="Fechar">✕</button>
+      </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Nome / ticker</label><input type="text" id="i-nome" placeholder="ex: IWDA, BTC"></div>
+      <div class="form-group"><label>Tipo</label><select id="i-tipo"><option>ETF</option><option>Ações</option><option>Criptomoeda</option><option>Obrigações</option><option>Imobiliário</option><option>Depósito a Prazo</option><option>Outro</option></select></div>
+      <div class="form-group"><label>Valor investido (€)</label><input type="number" id="i-inv" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Valor atual (€)</label><input type="number" id="i-atual" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Reforço mensal (€) · opcional</label><input type="number" id="i-mensal" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Dia do reforço</label><input type="number" id="i-dia" min="1" max="31" placeholder="ex: 5"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn-ghost" type="button" onclick="fecharModalInv()">Cancelar</button>
+      <button class="btn-primary" type="button" onclick="addInv()">Adicionar</button>
+    </div>
+    </div>
+  </div>
+  <div class="metrics" id="inv-metrics"></div>
+  <div id="lista-inv"></div>
+</div>
+
+<!-- PPR -->
+<div id="page-ppr" class="page">
+  <div class="page-title">PPR / Pensões</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-primary" type="button" onclick="abrirModalPPR()">＋ Novo PPR / Plano</button>
+  </div>
+  <div id="modal-ppr" class="account-modal" onclick="if(event.target===this)fecharModalPPR()">
+    <div class="account-modal-panel credit-modal-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div class="card-title" style="margin:0">Adicionar</div>
+        <button class="btn-ghost" type="button" onclick="fecharModalPPR()" aria-label="Fechar">✕</button>
+      </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Nome / gestora</label><input type="text" id="ppr-nome"></div>
+      <div class="form-group"><label>Tipo</label><select id="ppr-tipo"><option>PPR</option><option>Fundo de pensões</option><option>Plano reforma empresa</option><option>Outro</option></select></div>
+      <div class="form-group"><label>Total contribuído (€)</label><input type="number" id="ppr-contrib" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Valor atual (€)</label><input type="number" id="ppr-atual" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Contribuição mensal (€)</label><input type="number" id="ppr-mensal" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Dia do reforço</label><input type="number" id="ppr-dia" min="1" max="31" placeholder="ex: 5"></div>
+      <div class="form-group"><label>Ano de resgate</label><input type="number" id="ppr-ano" min="2024" max="2100"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn-ghost" type="button" onclick="fecharModalPPR()">Cancelar</button>
+      <button class="btn-primary" type="button" onclick="addPPR()">Adicionar</button>
+    </div>
+    </div>
+  </div>
+  <div id="lista-ppr"></div>
+</div>
+
+
+<!-- SUBSCRIÇÕES -->
+<div id="page-subscricoes" class="page">
+  <div class="page-title">Subscrições</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <button class="btn-primary" type="button" onclick="abrirModalSub()">＋ Nova Subscrição</button>
+  </div>
+  <div id="modal-sub" class="account-modal" onclick="if(event.target===this)fecharModalSub()">
+    <div class="account-modal-panel credit-modal-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+        <div class="card-title" style="margin:0">Nova subscrição</div>
+        <button class="btn-ghost" type="button" onclick="fecharModalSub()" aria-label="Fechar">✕</button>
+      </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Nome</label><input type="text" id="sub-nome"></div>
+      <div class="form-group"><label>Valor (€)</label><input type="number" id="sub-valor" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><label>Periodicidade</label>
+        <select id="sub-periodo">
+          <option value="mensal">Mensal</option>
+          <option value="anual">Anual</option>
+          <option value="trimestral">Trimestral</option>
+          <option value="semestral">Semestral</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Dia de cobrança</label><input type="number" id="sub-dia" min="1" max="31"></div>
+      <div class="form-group"><label>Mês (anual/trimestral)</label><input type="number" id="sub-mes" min="1" max="12"></div>
+      <div class="form-group"><label>Categoria</label>
+        <select id="sub-cat">
+          <option>Entretenimento</option><option>Produtividade</option><option>Saúde</option>
+          <option>Educação</option><option>Software</option><option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group full"><label>Notas</label><input type="text" id="sub-notas"></div>
+      <div class="form-group"><label>Conta a debitar</label><select id="sub-conta"><option value="">— sem conta —</option></select></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn-ghost" type="button" onclick="fecharModalSub()">Cancelar</button>
+      <button class="btn-primary" onclick="addSub()">＋ Adicionar subscrição</button>
+    </div>
+    </div>
+  </div>
+  <div class="metrics" id="sub-metrics"></div>
+  <div id="lista-subs"></div>
+</div>
+
+<!-- BACKUP -->
+<div id="page-backup" class="page">
+  <div class="page-title">Backup e dados</div>
+  <div class="card">
+    <div class="card-title">Exportar dados</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1rem;line-height:1.6">Exporta todos os teus dados para um ficheiro JSON. Guarda-o num local seguro para teres backup.</p>
+    <button class="btn-primary" onclick="exportarDados()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5 5-5"/><path d="M12 4v12"/></svg> Exportar JSON</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Importar dados</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1rem;line-height:1.6">Importa um ficheiro JSON anteriormente exportado. <span style="color:var(--red)">Atenção: substitui todos os dados atuais.</span></p>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importarDados(event)">
+    <button class="btn-ghost" onclick="document.getElementById('import-file').click()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 9l5-5 5 5"/><path d="M12 4v12"/></svg> Selecionar ficheiro JSON</button>
+    <div id="import-msg" style="margin-top:10px;font-size:13px;display:none"></div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="display:flex;justify-content:space-between;align-items:center"><span>Informação sobre armazenamento</span><button onclick="eliminarTodosDados()" style="background:rgba(240,96,96,0.15);color:#f06060;border:0.5px solid rgba(240,96,96,0.3);padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--font)">Eliminar todos os dados</button></div>
+    <div id="storage-info"></div>
+    <div style="margin-top:1rem">
+      <button class="btn-ghost" onclick="forcaMigracao()" style="font-size:12px"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 9 4.9L6 3"/><path d="M3 3v5h5"/></svg> Tentar importar dados de versão anterior</button>
+      <div id="migracao-msg" style="font-size:12px;margin-top:8px;display:none"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-primary" id="mobile-primary">
+  <div class="mp-item" id="mp-dinheiro" onclick="mpGroup('dinheiro')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.2 7a6 7 0 1 0 0 10"/><path d="M13 10H6m0 4h7"/></svg><span>Dinheiro</span></div>
+  <div class="mp-item" id="mp-obrigacoes" onclick="mpGroup('obrigacoes')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h2"/></svg><span>Obrigações</span></div>
+  <div class="mp-item mp-center active" id="mp-dashboard" onclick="mpDash()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></div>
+  <div class="mp-item" id="mp-patrimonio" onclick="mpGroup('patrimonio')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/></svg><span>Património</span></div>
+  <div class="mp-item" id="mp-settings" onclick="mpGroup('settings')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.657 3.582 3 8 3s8-1.343 8-3V6"/><path d="M4 12v6c0 1.657 3.582 3 8 3"/><path d="M16 19l3-3 3 3"/><path d="M19 16v6"/></svg><span>Definições</span></div>
+</nav>
+<nav class="mobile-secondary" id="mobile-secondary"></nav>
+<script src="js/core.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/transactions.js"></script>
+<script src="js/goals.js"></script>
+<script src="js/credits.js"></script>
+<script src="js/simulator.js"></script>
+<script src="js/forecast.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/credit-form.js"></script>
+<script src="js/subscriptions-calendar.js"></script>
+<script src="js/backup.js"></script>
+<script src="js/automatic-transactions.js"></script>
+<script src="js/mobile-navigation.js"></script>
+<script src="js/bootstrap.js"></script>
+</body>
+</html>

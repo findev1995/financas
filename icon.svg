@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#0f0f11"/>
-  <rect x="80" y="300" width="90" height="132" rx="12" fill="#2dd4a0" opacity="0.4"/>
-  <rect x="206" y="220" width="90" height="212" rx="12" fill="#2dd4a0" opacity="0.7"/>
-  <rect x="332" y="100" width="90" height="332" rx="12" fill="#2dd4a0"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">fin.pessoal</title>
+  <desc id="desc">Ícone de um gráfico ascendente verde sobre fundo escuro.</desc>
+  <rect width="512" height="512" fill="#0f0f11"/>
+  <rect x="72" y="72" width="368" height="368" rx="96" fill="#17171a" stroke="#2dd4a0" stroke-opacity=".18" stroke-width="2"/>
+  <path d="M128 376h256" fill="none" stroke="#2dd4a0" stroke-opacity=".22" stroke-width="12" stroke-linecap="round"/>
+  <rect x="132" y="282" width="64" height="94" rx="16" fill="#2dd4a0" opacity=".4"/>
+  <rect x="224" y="218" width="64" height="158" rx="16" fill="#2dd4a0" opacity=".7"/>
+  <rect x="316" y="138" width="64" height="238" rx="16" fill="#2dd4a0"/>
 </svg>

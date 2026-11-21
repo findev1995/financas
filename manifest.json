@@ -1,13 +1,20 @@
 {
+  "id": "/financas/",
   "name": "fin.pessoal",
   "short_name": "fin.pessoal",
-  "description": "App de finanças pessoais",
+  "description": "Gestão pessoal de finanças, orçamento, poupança e crédito.",
+  "lang": "pt-PT",
+  "dir": "ltr",
   "start_url": "/financas/",
   "scope": "/financas/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#0f0f11",
   "theme_color": "#0f0f11",
-  "orientation": "any",
+  "categories": [
+    "finance",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "icon.svg",
