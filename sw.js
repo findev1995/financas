@@ -1,30 +1,46 @@
-const CACHE = 'fin-pessoal-v1';
+const CACHE_NAME='fin-pessoal-v12-modular';
+const APP_SHELL=[
+  './',
+  './index.html',
+  './css/styles.css',
+  './js/core.js',
+  './js/dashboard.js',
+  './js/transactions.js',
+  './js/goals.js',
+  './js/credits.js',
+  './js/simulator.js',
+  './js/forecast.js',
+  './js/assets.js',
+  './js/credit-form.js',
+  './js/subscriptions-calendar.js',
+  './js/backup.js',
+  './js/automatic-transactions.js',
+  './js/mobile-navigation.js',
+  './js/bootstrap.js',
+  './manifest.json',
+  './icon.svg'
+];
 
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(['/', '/index.html']))
-      .catch(() => {})
-  );
+self.addEventListener('install',event=>{
+  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)));
   self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
+self.addEventListener('activate',event=>{
+  event.waitUntil(caches.keys().then(keys=>Promise.all(
+    keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key))
+  )).then(()=>self.clients.claim()));
 });
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
-      if(res.ok){
-        const clone = res.clone();
-        caches.open(CACHE).then(cache => cache.put(e.request, clone));
+self.addEventListener('fetch',event=>{
+  if(event.request.method!=='GET')return;
+  event.respondWith(caches.match(event.request).then(cached=>
+    cached||fetch(event.request).then(response=>{
+      if(new URL(event.request.url).origin===self.location.origin&&response.ok){
+        const copy=response.clone();
+        caches.open(CACHE_NAME).then(cache=>cache.put(event.request,copy));
       }
-      return res;
-    })).catch(() => caches.match('/index.html'))
-  );
+      return response;
+    }).catch(()=>caches.match('./index.html'))
+  ));
 });
